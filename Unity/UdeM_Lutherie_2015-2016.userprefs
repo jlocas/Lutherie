@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\OSCSender.cs">
+    <Files>
+      <File FileName="Assets\UnityOSC-master\src\OSC\OSCBundle.cs" Line="89" Column="49" />
+      <File FileName="Assets\UnityOSC-master\src\OSCHandler.cs" Line="101" Column="46" />
+      <File FileName="Assets\Scripts\OSCSender.cs" Line="8" Column="30" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
