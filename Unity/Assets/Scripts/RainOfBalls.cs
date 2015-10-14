@@ -8,6 +8,9 @@ public class RainOfBalls : MonoBehaviour {
 	public GameObject ballContainer;
 
 	[Space(20)]
+	public float ballForce;
+
+	[Space(20)]
 	public float bpm;
 	public float tempoGridSize;
 	public float ticks;
@@ -53,6 +56,7 @@ public class RainOfBalls : MonoBehaviour {
 	{
 		Vector3 pos = new Vector3(realPosX + Random.Range(sizeX * -0.5f, sizeX * 0.5f), posY, realPosZ + Random.Range(sizeZ * -0.5f, sizeZ * 0.5f));
 		GameObject newBall = Instantiate(ballPrefab, pos, Quaternion.identity) as GameObject;
+		newBall.GetComponent<Ball>().Force = ballForce;
 		//newBall.transform.SetParent(ballContainer.transform);
 	}
 

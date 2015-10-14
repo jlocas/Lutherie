@@ -6,6 +6,12 @@ public class Ball : MonoBehaviour {
 	public bool hasParticles = false;
 	public GameObject particleContainer;
 	public GameObject particles;
+	private float force;
+	public float Force 
+	{
+		get { return force; }  
+		set { force = value; }
+	}
 
 	void OnTriggerEnter(Collider col)
 	{
@@ -17,7 +23,7 @@ public class Ball : MonoBehaviour {
 			hasParticles = true;
 			//newParticles.transform.SetParent(particleContainer.transform);
 		}
-		col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, 500f) );
+		col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, force) );
 		Destroy(gameObject);
 	}
 

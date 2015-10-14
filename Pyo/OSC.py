@@ -36,7 +36,7 @@ def OSC(adress, *args):
                 blocks[x][z].position.z = args[i * 3 + 2]
                 i+=1
                 
-        UpdateSynth()
+        UpdateSynth(args)
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC)
 
@@ -58,7 +58,7 @@ def SetupSynth():
             
     instr = SumOsc(freq = freqs, ratio=1, index=0.5, mul=amps).out()
     
-def UpdateSynth():
+def UpdateSynth(args):
     global amps
     global freqs
     
@@ -66,7 +66,8 @@ def UpdateSynth():
     
     for x in range(gridLength):
         for z in range(gridLength):
-            amps[i] = blocks[x][z].position.y * 0.5
+            amps[i] = args[i * 3 + 1] * 0.1
+            freqs[i] = freqs[i] + freqs[i] * args[i*3] + args[i*3+2]
             i+=1
     
     instr.setMul(amps)
