@@ -81,7 +81,7 @@ def UpdateFilters():
 
             i+=1
             
-    
+    print freqs
     
 
 

@@ -17,7 +17,7 @@ public class Ball : MonoBehaviour {
 			hasParticles = true;
 			//newParticles.transform.SetParent(particleContainer.transform);
 		}
-		col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, 500f) );
+		col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, 5f) );
 		Destroy(gameObject);
 	}
 

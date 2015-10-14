@@ -6,11 +6,7 @@
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<RootNamespace></RootNamespace>
-<<<<<<< HEAD:Assembly-CSharp-firstpass.csproj
-	<ProjectGuid>{719D253D-2450-B736-CDC0-356C01602CBA}</ProjectGuid>
-=======
 	<ProjectGuid>{2662B409-6332-1E56-D797-C9025C53BDD6}</ProjectGuid>
->>>>>>> 4c538f1c28ce315af9f100e32eaf43d65b6bd66c:Unity/Assembly-CSharp-firstpass.csproj
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
@@ -187,11 +183,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
-<<<<<<< HEAD:Assembly-CSharp-firstpass.csproj
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
-=======
- <HintPath>E:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
->>>>>>> 4c538f1c28ce315af9f100e32eaf43d65b6bd66c:Unity/Assembly-CSharp-firstpass.csproj
  </Reference>
  <Reference Include="Mono.Cecil">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/Mono.Cecil.dll</HintPath>

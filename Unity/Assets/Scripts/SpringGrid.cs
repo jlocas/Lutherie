@@ -218,8 +218,7 @@ public class SpringGrid : MonoBehaviour {
 
 	public SpringGridBlock GetBlock(int x, int z)
 	{
-		SpringGridBlock block = blocks[x,z];
-		return block;
+		return blocks[x,z];
 	}
 
 

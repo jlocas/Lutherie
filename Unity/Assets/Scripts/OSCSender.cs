@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class OSCSender : MonoBehaviour {
 
 	public SpringGrid grid;
 	private int gridLength;
+
+	string filename = "LeFichier.txt";
+
+	StreamWriter sw = new StreamWriter("fichier.txt");
 
 	Dictionary<string, ServerLog> servers = new Dictionary<string, ServerLog>();
 
@@ -34,14 +39,21 @@ public class OSCSender : MonoBehaviour {
 				positions.Add(grid.GetBlock(x, z).Block.transform.position.x);
 				positions.Add(grid.GetBlock(x, z).Block.transform.position.y);
 				positions.Add(grid.GetBlock(x, z).Block.transform.position.z);
+				sw.Write("block ");
+				sw.WriteLine(x + z);
+				sw.Write(": ");
+				sw.WriteLine(grid.GetBlock(x,z).Block.transform.position.y);
 
 			}
 		}
+
 		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/blocks/positions", positions);
 	}
 
 	private void SendGridLength()
 	{
 		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/length", gridLength);
+		sw.Write("Grid size: ");
+		sw.WriteLine(gridLength);
 	}
 }

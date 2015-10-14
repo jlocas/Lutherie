@@ -6,11 +6,7 @@
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<RootNamespace></RootNamespace>
-<<<<<<< HEAD:Assembly-CSharp-Editor.csproj
-	<ProjectGuid>{2BFBB093-EDD7-9205-2C66-6040C62B3C2F}</ProjectGuid>
-=======
 	<ProjectGuid>{6311E6C6-0A20-383B-320B-694068DE37A5}</ProjectGuid>
->>>>>>> 4c538f1c28ce315af9f100e32eaf43d65b6bd66c:Unity/Assembly-CSharp-Editor.csproj
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -165,11 +161,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Networking">
-<<<<<<< HEAD:Assembly-CSharp-Editor.csproj
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
-=======
- <HintPath>E:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
->>>>>>> 4c538f1c28ce315af9f100e32eaf43d65b6bd66c:Unity/Assembly-CSharp-Editor.csproj
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -213,15 +205,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-<<<<<<< HEAD:Assembly-CSharp-Editor.csproj
-      <Project>{719D253D-2450-B736-CDC0-356C01602CBA}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{781303E0-1C8C-8ECE-A3BE-A258FD871566}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
-=======
       <Project>{2662B409-6332-1E56-D797-C9025C53BDD6}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{CD8C9303-404B-FB8D-6B9B-21988D5CAC0A}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
->>>>>>> 4c538f1c28ce315af9f100e32eaf43d65b6bd66c:Unity/Assembly-CSharp-Editor.csproj
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
