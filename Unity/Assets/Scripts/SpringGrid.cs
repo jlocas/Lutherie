@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpringGrid : MonoBehaviour {
 
@@ -8,6 +9,10 @@ public class SpringGrid : MonoBehaviour {
 
 	[Space(20)] //block and grid settings
 	public int sideLength;
+	public int lengthDiv; //how many parts the grid is divided into
+	private int groupLength; //length of a group's side
+	private int groupsPerSide;
+	public int GroupsPerSide { get { return groupsPerSide;} }
 	public float anchorHeight = -10f;
 	public bool freezeEdges;
 	public bool blocksCollision;
@@ -19,11 +24,15 @@ public class SpringGrid : MonoBehaviour {
 
 	[Space(20)]
 	public bool repositionBlocks;
+	public bool repositionNow = false;
+	public RigidbodyConstraints constraints;
 	public float reposSpeed;
 	public float minDistance;
 	public float minVelocity;
 
-	private SpringGridBlock[,] blocks;
+	private SpringGridBlock[,] blocks; //all blocks in x and z
+	private SpringGridBlockGroup[,] blockGroups; //all block groups
+	public SpringGridBlockGroup[,] BlockGroups{	get { return blockGroups; } }
 
 	private Vector3 oldAnchorPos;
 	private float oldAnchorHeight = -10f;
@@ -35,9 +44,12 @@ public class SpringGrid : MonoBehaviour {
 	private Vector3 oldDamper;
 	private bool oldSpringCollision;
 
+	private bool oldRepositionNow;
+	private RigidbodyConstraints oldConstraints;
+
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		InitOlds();
 		CreateGrid();
 
@@ -61,23 +73,30 @@ public class SpringGrid : MonoBehaviour {
 	 * *************************************************
 	 * *************************************************
 	 */
+
 	private void CreateGrid()
 	{
 		blocks = new SpringGridBlock[sideLength, sideLength];
 
+
+
 		CreateBlocks();
 		SetupSprings();
+		CreateGroups ();
 		SetFreezeEdges(freezeEdges);
 	}
 
 	private void CreateBlocks()
 	{
+		GameObject springGridObjects = new GameObject();
+		springGridObjects.name = "Spring Grid Objects";
+
 		GameObject blockContainer = new GameObject();
-		blockContainer.transform.SetParent(gameObject.transform);
+		blockContainer.transform.SetParent(springGridObjects.transform);
 		blockContainer.name = "Blocks";
 
 		GameObject anchorContainer = new GameObject();
-		anchorContainer.transform.SetParent(gameObject.transform);
+		anchorContainer.transform.SetParent(springGridObjects.transform);
 		anchorContainer.name = "Anchors";
 
 		for(int x = 0; x < sideLength; x++){
@@ -143,14 +162,67 @@ public class SpringGrid : MonoBehaviour {
 				blocks[x,z].Springs[2].spring = spring.y;
 				blocks[x,z].Springs[2].damper = damper.y;
 				blocks[x,z].Springs[2].enableCollision = springCollision;
+			}
+		}
+	}
 
-				foreach(SpringJoint joint in blocks[x,z].Springs)
-				{
-					if(joint.connectedBody == null)
-					{
-						Destroy(joint);
-					}
-				}
+	private void CreateGroups()
+	{
+		groupLength = (int)(sideLength / lengthDiv);							//groupLength = how many blocks in 1 block group
+		groupsPerSide = (int)(sideLength / groupLength); 						//groupsPerSide = how many block groups per side of the grid
+		blockGroups = new SpringGridBlockGroup[groupsPerSide, groupsPerSide];	//create new block groups to which we give blocks later
+
+		int[,] i = new int[groupLength, groupLength];
+
+		/*
+		 * 2d array of arrays
+		 * 2d adress of the group to get an array of blocks it contains
+		 * 
+		 * for a 12 x 12 grid where lengthDiv = 3:
+		 * 
+		 * z
+		 * [][][] 	groups	[0,0][1,0][2,0]	content	[ blocks[4] ][ blocks[4] ][ blocks[4] ]
+		 * [][][]			[0,1][1,1][2,1]			[ blocks[4] ][ blocks[4] ][ blocks[4] ]
+		 * [][][]x			[0,2][1,2][2,2]			[ blocks[4] ][ blocks[4] ][ blocks[4] ]
+		 * 
+		 */
+
+		SpringGridBlock[,][] groupArrays = new SpringGridBlock[groupsPerSide, groupsPerSide][];
+
+		for(int x=0; x < groupsPerSide; x++){
+			for(int z=0; z < groupsPerSide; z++){
+
+				//initialize the groupArrays ([,][], contains the blocks for each group)
+				groupArrays[x,z] = new SpringGridBlock[groupLength*groupLength];
+				//create new block groups to which we give blocks later
+				blockGroups[x,z] = new SpringGridBlockGroup();
+				blockGroups[x,z].Blocks = new SpringGridBlock[groupLength*groupLength];
+			}
+		}
+
+		//Assign individual blocks to a group
+		for(int x=0; x < sideLength; x++){
+			for(int z = 0; z < sideLength; z++){
+				
+				//find out which group this block belongs to
+				int xGroup = (int)(x / groupLength);
+				int zGroup = (int)(z / groupLength);
+
+				
+				//add block[x,z] to the correct group
+				groupArrays[xGroup, zGroup][ i [xGroup, zGroup]  ] = blocks[x,z];	//add blocks[x,z] to the groupArray[xg, zg] at a new index
+				blocks[x,z].Block.name += " (group " + xGroup + ", " + zGroup + ")";//rename
+				blocks[x,z].BlockGroup = new int[2]{x,z};							//tell the block which group it belongs to
+				i[xGroup, zGroup]++;
+			}
+		}
+
+		//Assign group arrays
+		for(int x=0; x < groupsPerSide; x++){
+			for(int z=0; z < groupsPerSide; z++){
+				blockGroups[x,z].Blocks = groupArrays[x,z];
+				blockGroups[x,z].Initialize();
+
 			}
 		}
 	}
@@ -180,7 +252,7 @@ public class SpringGrid : MonoBehaviour {
 
 	}
 
-	void Reposition() //reposition blocks[x,z]
+	private void Reposition() //reposition blocks[x,z]
 	{
 		for(int x = 0; x < sideLength; x++)	{
 			for(int z = 0; z <sideLength; z++){
@@ -191,7 +263,7 @@ public class SpringGrid : MonoBehaviour {
 					Vector3 currentPos = block.Block.transform.position;
 					Vector3 targetPos = new Vector3(blocks[x,z].Anchor.transform.position.x, blocks[x,z].Anchor.transform.position.y + anchorHeight * -1, blocks[x,z].Anchor.transform.position.z);
 					float velocity = block.Body.velocity.magnitude;
-					float distance = Vector3.Distance(currentPos, targetPos);
+					float distance = Vector3.Distance(currentPos, targetPos); 
 
 					if(distance > minDistance && velocity < minVelocity)	{
 						block.Block.transform.position = Vector3.Lerp(currentPos, targetPos, reposSpeed * Time.deltaTime);
@@ -206,7 +278,30 @@ public class SpringGrid : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	private void RepositionNow(bool tog)
+	{
+		bool repos = repositionBlocks;
+
+		if(tog){
+			repositionBlocks = true;
+		} else {
+			repositionBlocks = repos;
+		}
+
+		for(int x = 0; x < sideLength; x++)	{
+			for(int z = 0; z <sideLength; z++){
+				if(tog){
+					blocks[x,z].Body.constraints = RigidbodyConstraints.FreezeAll;
+				} else if (!tog){
+					blocks[x,z].Body.constraints = constraints;
+				}
+			}
+		}
+
+		SetFreezeEdges(freezeEdges);
+
+	}
 
 	/*
 	 * *************************************************************
@@ -251,6 +346,8 @@ public class SpringGrid : MonoBehaviour {
 		if(tog)
 		{
 			constraints = RigidbodyConstraints.FreezeAll;
+		} else { 
+			constraints = RigidbodyConstraints.FreezeRotation; 
 		}
 
 		for(int i = 0; i < sideLength; i++)
@@ -260,7 +357,6 @@ public class SpringGrid : MonoBehaviour {
 			blocks[i, 0].Body.constraints = constraints;
 			blocks[i, sideLength - 1].Body.constraints = constraints;
 		}
-		
 	}
 
 	private void SetAnchorHeight(float newHeight)
@@ -298,6 +394,7 @@ public class SpringGrid : MonoBehaviour {
 	{
 		for(int x = 0; x < sideLength; x++){
 			for(int z = 0; z < sideLength; z++){
+
 				blocks[x,z].Springs[0].damper = damp.x;
 				blocks[x,z].Springs[1].damper = damp.z;
 				blocks[x,z].Springs[2].damper = damp.y;
@@ -318,6 +415,19 @@ public class SpringGrid : MonoBehaviour {
 		}
 	}
 
+	private void SetConstraints(RigidbodyConstraints constraints)
+	{
+		for(int x = 0; x < sideLength; x++){
+			for(int z = 0; z < sideLength; z++){
+				if(repositionNow){
+					blocks[x,z].Body.constraints = RigidbodyConstraints.FreezeAll;
+				} else {
+					blocks[x,z].Body.constraints = constraints;
+				}
+			}
+		}
+		SetFreezeEdges(freezeEdges);
+	}
 
 	private void InitOlds()
 	{
@@ -328,6 +438,8 @@ public class SpringGrid : MonoBehaviour {
 		oldSpring = spring;
 		oldDamper = damper;
 		oldSpringCollision = springCollision;
+
+		oldConstraints = constraints;
 	}
 
 	private void UpdateParameters()
@@ -366,6 +478,18 @@ public class SpringGrid : MonoBehaviour {
 		{
 			SetSpringCollision(springCollision);
 			oldSpringCollision = springCollision;
+		}
+
+		if(repositionNow != oldRepositionNow)
+		{
+			RepositionNow(repositionNow);
+			oldRepositionNow = repositionNow;
+		}
+
+		if(constraints != oldConstraints)
+		{
+			SetConstraints(constraints);
+			oldConstraints = constraints;
 		}
 	}
 }

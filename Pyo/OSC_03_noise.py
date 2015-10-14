@@ -39,7 +39,7 @@ def OSC(adress, *args):
 
                 i+=1
                 
-        UpdateFilters()
+        UpdateFilters(args)
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC)
 
@@ -54,7 +54,7 @@ def SetupFilters():
     freqJump = 2
     freqs = [0 for i in range(gridSize)]
     amps = [0 for i in range(gridSize)]
-    filters = [Biquad(input=src, freq=100, q=1, type=2, mul=0.5) for i in range (gridSize)]
+    filters = [Biquad(input=src, freq=100, q=100, type=2, mul=0.5) for i in range (gridSize)]
 
 
     i=0
@@ -66,7 +66,7 @@ def SetupFilters():
             i += 1
             
     
-def UpdateFilters():
+def UpdateFilters(args):
     global amps
     global freqs
     
@@ -74,8 +74,8 @@ def UpdateFilters():
     
     for x in range(gridLength):
         for z in range(gridLength):
-            amps[i] = blocks[x][z].position.y
-            freqs[i] = freqs[i] + blocks[x][z].position.x + blocks[x][z].position.z
+            amps[i] = args[i * 3+1]
+            freqs[i] = freqs[i] + args[i * 3] + args[i * 3+2]
             filters[i].setFreq(freqs[i])
             filters[i].setMul(amps[i])
 
