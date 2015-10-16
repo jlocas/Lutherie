@@ -12,9 +12,10 @@ gridLength = 0 #int
 gridSize = 0
 
 freqs = []
+ffreqs = []
 amps = []
 
-instr = SumOsc(freq = 100, ratio=0.2, index=0.2, mul=0.1)
+instr = Sine(freq = 100, mul=0.1)
 
 
 def OSC(adress, *args):
@@ -38,36 +39,38 @@ def SetupSynth():
     global freqs
     global instr
     global amps
-    
-    fundFreq = 50
-    #freqs = [SigTo(value=100, time=0.1, init=100) for i in range(gridSize)]
-    freqs = [0 for i in range(gridSize)]
+    global ffreqs
+
+    fundFreq = 200
+    freqs = [SigTo(value=100, time=0.1, init=100) for i in range(gridSize)]
+    ffreqs = [0 for i in range(gridSize)]
     amps = [SigTo(value=0, time=0.1, init=0) for i in range(gridSize)]
     i=0
     
     for x in range(gridLength):
         for z in range(gridLength):
-            #freqs[i].setValue(fundFreq + fundFreq * (x + z))
-            freqs[i] = fundFreq + fundFreq * (x + z)
+            freqs[i].setValue(fundFreq + fundFreq * (x + z))
+            ffreqs[i] = fundFreq + fundFreq * (x + z)
             i += 1
             
-    instr = SumOsc(freq = freqs, ratio=1, index=0.5, mul=amps).out()
+    instr = Sine(freq = freqs, mul=amps).out()
     
 def UpdateSynth(args):
     global amps
     global freqs
-    
+    global ffreqs
+
     i = 0
     
     for x in range(gridLength):
         for z in range(gridLength):
             amps[i].setValue( args[i * 3 + 1] * 0.1 )
-            #freqs[i].setValue( freqs[i] + freqs[i] * args[i*3] + args[i*3+2] )
-            freqs[i] = freqs[i] + freqs[i] * args[i*3] + args[i*3+2]
+            freqs[i].setValue( ffreqs[i] + ffreqs[i] *(args[i*3] + args[i*3+2]) * 0.1 )
+            #freqs[i] = freqs[i] + freqs[i] * args[i*3] + args[i*3+2]
             i+=1
     
     instr.setMul(amps)
-    #instr.setFreq(freqs)
+    instr.setFreq(freqs)
     
 instr.out()
 

@@ -9,8 +9,8 @@ class Vector3:
         self.z = z
 
 class SpringGridBlock:
-    def __init__(self, position = Vector3(0,0,0)):
-        self.position = position
+    def __init__(self):
+        self.position = Vector3(0,0,0)
         
     def SetPosition(self, pos):
         self.position = pos

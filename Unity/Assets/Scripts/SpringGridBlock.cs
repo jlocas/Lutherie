@@ -126,7 +126,6 @@ public class SpringGridBlockGroup
 		Vector3 sum = new Vector3(0f,0f,0f);
 		float multiplier = 1f / blocks.Length;
 
-
 		foreach(SpringGridBlock blocky in blocks)
 		{
 			sum.x += blocky.Block.transform.position.x;

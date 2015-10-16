@@ -172,7 +172,7 @@ public class SpringGrid : MonoBehaviour {
 		groupsPerSide = (int)(sideLength / groupLength); 						//groupsPerSide = how many block groups per side of the grid
 		blockGroups = new SpringGridBlockGroup[groupsPerSide, groupsPerSide];	//create new block groups to which we give blocks later
 
-		int[,] i = new int[groupLength, groupLength];
+		int[,] i = new int[lengthDiv, lengthDiv];
 
 		/*
 		 * 2d array of arrays
@@ -199,18 +199,16 @@ public class SpringGrid : MonoBehaviour {
 				blockGroups[x,z].Blocks = new SpringGridBlock[groupLength*groupLength];
 			}
 		}
-
+		Debug.Log(groupLength);
 		//Assign individual blocks to a group
 		for(int x=0; x < sideLength; x++){
 			for(int z = 0; z < sideLength; z++){
-				
 				//find out which group this block belongs to
 				int xGroup = (int)(x / groupLength);
 				int zGroup = (int)(z / groupLength);
-
 				
 				//add block[x,z] to the correct group
-				groupArrays[xGroup, zGroup][ i [xGroup, zGroup]  ] = blocks[x,z];	//add blocks[x,z] to the groupArray[xg, zg] at a new index
+				groupArrays[xGroup, zGroup][ i[xGroup, zGroup]  ] = blocks[x,z];		//add blocks[x,z] to the groupArray[xg, zg] at a new index
 				blocks[x,z].Block.name += " (group " + xGroup + ", " + zGroup + ")";//rename
 				blocks[x,z].BlockGroup = new int[2]{x,z};							//tell the block which group it belongs to
 				i[xGroup, zGroup]++;
@@ -222,7 +220,6 @@ public class SpringGrid : MonoBehaviour {
 			for(int z=0; z < groupsPerSide; z++){
 				blockGroups[x,z].Blocks = groupArrays[x,z];
 				blockGroups[x,z].Initialize();
-
 			}
 		}
 	}
