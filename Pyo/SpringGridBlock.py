@@ -11,9 +11,13 @@ class Vector3:
 class SpringGridBlock:
     def __init__(self):
         self.position = Vector3(0,0,0)
+        self.oldPos = Vector3(0,0,0)
         
     def SetPosition(self, pos):
         self.position = pos
         
     def GetPosition(self):
         return self.position
+        
+    def Update(self, x, y, z):
+        return 

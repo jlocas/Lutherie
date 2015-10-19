@@ -199,7 +199,7 @@ public class SpringGrid : MonoBehaviour {
 				blockGroups[x,z].Blocks = new SpringGridBlock[groupLength*groupLength];
 			}
 		}
-		Debug.Log(groupLength);
+
 		//Assign individual blocks to a group
 		for(int x=0; x < sideLength; x++){
 			for(int z = 0; z < sideLength; z++){
