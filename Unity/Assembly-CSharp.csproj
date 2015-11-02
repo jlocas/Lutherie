@@ -47,8 +47,13 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Ball.cs" />
      <Compile Include="Assets\Scripts\BallParticles.cs" />
+     <Compile Include="Assets\Scripts\Clock.cs" />
+     <Compile Include="Assets\Scripts\Master.cs" />
      <Compile Include="Assets\Scripts\OSCSender.cs" />
+     <Compile Include="Assets\Scripts\Pattern.cs" />
+     <Compile Include="Assets\Scripts\Rain.cs" />
      <Compile Include="Assets\Scripts\RainOfBalls.cs" />
+     <Compile Include="Assets\Scripts\Randoms.cs" />
      <Compile Include="Assets\Scripts\SpringGrid.cs" />
      <Compile Include="Assets\Scripts\SpringGridBlock.cs" />
      <Compile Include="Assets\UnityOSC-master\src\OSC\OSCBundle.cs" />

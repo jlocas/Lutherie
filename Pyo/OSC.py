@@ -21,13 +21,13 @@ def OSC(adress, *args):
     global gridSize
     global blocks
 
-    if adress == '/springGrid/length':
+    if adress == '/springGrid/groupsPerSide':
        gridLength = args[0]
        gridSize = gridLength*gridLength
        blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLength)]
        SetupSynth()
 
-    if adress == '/springGrid/blocks/positions':
+    if adress == '/springGrid/blockGroups/positions':
         i = 0
         for x in range(gridLength):
             for z in range(gridLength):
@@ -67,7 +67,7 @@ def UpdateSynth():
     for x in range(gridLength):
         for z in range(gridLength):
             amps[i] = blocks[x][z].position.y * 0.1
-            freqs[i] = freqs[i] + freqs[i] * blocks[x][z].position.x + blocks[x][z].position.z
+            #freqs[i] = freqs[i] + freqs[i] * blocks[x][z].position.x + blocks[x][z].position.z
             i+=1
     
     instr.setMul(amps)

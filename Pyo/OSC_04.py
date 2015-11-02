@@ -41,7 +41,7 @@ def SetupSynth():
     global amps
     global ffreqs
 
-    fundFreq = 200
+    fundFreq = 40
     freqs = [SigTo(value=100, time=0.1, init=100) for i in range(gridSize)]
     ffreqs = [0 for i in range(gridSize)]
     amps = [SigTo(value=0, time=0.1, init=0) for i in range(gridSize)]
@@ -65,14 +65,15 @@ def UpdateSynth(args):
     for x in range(gridLength):
         for z in range(gridLength):
             amps[i].setValue( args[i * 3 + 1] * 0.1 )
-            freqs[i].setValue( ffreqs[i] + ffreqs[i] *(args[i*3] + args[i*3+2]) * 0.1 )
+            freqs[i].setValue( ffreqs[i] + ffreqs[i] *(args[i*3] + args[i*3+2]) * 0.001 )
             #freqs[i] = freqs[i] + freqs[i] * args[i*3] + args[i*3+2]
             i+=1
     
     instr.setMul(amps)
     instr.setFreq(freqs)
     
-instr.out()
+output = Freeverb(input=Clip(instr, -1, 1, 1, 0), size=0.5, damp=0.3, bal=0.75, mul=1, add=0)
+output.out()
 
 
 
