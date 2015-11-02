@@ -7,17 +7,17 @@
      _Height2 ("Height 2", Float) = 1
      _Height3 ("Height 3", Float) = -1
      _Height4 ("Height 4", Float) = 1
-     _Height5 ("Height 2", Float) = 1
-     _Height6 ("Height 3", Float) = -1
-     _Height7 ("Height 4", Float) = 1
+     _Height5 ("Height 5", Float) = 1
+     _Height6 ("Height 6", Float) = -1
+     _Height7 ("Height 7", Float) = 1
      
      _Color1 ("Tint Color At 1", Color) = (0,0,0,1)
      _Color2 ("Tint Color At 2", Color) = (1,1,1,1)
      _Color3 ("Tint Color At 3", Color) = (0,0,0,1)
      _Color4 ("Tint Color At 4", Color) = (1,1,1,1)
-     _Color5 ("Tint Color At 2", Color) = (1,1,1,1)
-     _Color6 ("Tint Color At 3", Color) = (0,0,0,1)
-     _Color7 ("Tint Color At 4", Color) = (1,1,1,1)
+     _Color5 ("Tint Color At 5", Color) = (1,1,1,1)
+     _Color6 ("Tint Color At 6", Color) = (0,0,0,1)
+     _Color7 ("Tint Color At 7", Color) = (1,1,1,1)
    }
   
    SubShader
