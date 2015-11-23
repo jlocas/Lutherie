@@ -32,7 +32,7 @@ class SpringGridSynth:
         self.fm_freqBank = [[0 for x in range(self.length)] for z in range(self.length)] 
         self.fm_amps = [SigTo(value=0.0, time=0.1, init=0) for i in range(self.size)]
         self.fm_indices = [SigTo(value=0.0, time=0.1, init=0) for i in range(self.size)]
-        self.fm = FM(carrier=self.fm_freqs, index=self.fm_indices, ratio= 2, mul = self.fm_amps)
+        self.fm = FM(carrier=self.fm_freqs, index=self.fm_indices, ratio= [random.uniform(1.98, 2.02) for i in range(self.size)], mul = self.fm_amps)
 
         self.debug = False
         

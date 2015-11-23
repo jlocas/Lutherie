@@ -101,7 +101,7 @@ public class OSCHandler : MonoBehaviour
         //CreateServer("AndroidPhone", 6666);
 
 		CreateClient("Pyo", IPAddress.Parse("127.0.0.1"), 12543);
-		CreateServer("Server", 23415);
+		CreateServer("Unity", 23415);
 	}
 	
 	#region Properties

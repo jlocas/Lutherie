@@ -3,26 +3,17 @@
 from pyo import *
 from SpringGridBlock import *
 from OSC_Synth import *
+import sys
 
-s = Server(sr=44100, nchnls=2, buffersize=512, duplex=1).boot()
+s = Server(sr=44100, nchnls=2, buffersize=512, duplex=1).boot().start()
 
-blocks = [[]] #2d list of SpringGridBlock object
-gridLength = 0 #int
+gridLength = int(sys.argv[1])
+blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLength)]
+syn = SpringGridSynth(length=gridLength)
 
-syn = None ### Seulement une variable globale du genre "place holder"...
 
 def OSC(address, *args):
-    
-    global gridLength
-    global blocks
-    global syn
-
-    if address == '/springGrid/groupsPerSide':
-        gridLength = args[0]
-        blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLength)]
-        syn = SpringGridSynth(length=gridLength)
-        #dummy.value = syn.getOutput() ### Assigne le bon SpringGridSynth a la reverbe finale
-
+        
     if address == '/springGrid/blockGroups/positions':
         i = 0
         for x in range(gridLength):
