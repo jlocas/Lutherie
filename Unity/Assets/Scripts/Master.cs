@@ -20,12 +20,15 @@ public class Master : MonoBehaviour {
 		procsi.Arguments = grid.lengthDiv.ToString();
 
 		proc.StartInfo = procsi;
-		proc.Start();
-	
+		proc.Start();	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	void OnApplicationQuit(){
+		proc.Kill();
 	}
 }

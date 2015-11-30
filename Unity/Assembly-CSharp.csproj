@@ -45,15 +45,19 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Ball.cs" />
-     <Compile Include="Assets\Scripts\BallParticles.cs" />
      <Compile Include="Assets\Scripts\Clock.cs" />
+     <Compile Include="Assets\Scripts\ControlMapper.cs" />
      <Compile Include="Assets\Scripts\Master.cs" />
+     <Compile Include="Assets\Scripts\MidiController.cs" />
      <Compile Include="Assets\Scripts\OSCReceive.cs" />
      <Compile Include="Assets\Scripts\OSCSender.cs" />
      <Compile Include="Assets\Scripts\Pattern.cs" />
-     <Compile Include="Assets\Scripts\Rain.cs" />
-     <Compile Include="Assets\Scripts\RainOfBalls.cs" />
+     <Compile Include="Assets\Scripts\Rain\Ball.cs" />
+     <Compile Include="Assets\Scripts\Rain\BallBox.cs" />
+     <Compile Include="Assets\Scripts\Rain\BallParticles.cs" />
+     <Compile Include="Assets\Scripts\Rain\OLDRain.cs" />
+     <Compile Include="Assets\Scripts\Rain\Rain.cs" />
+     <Compile Include="Assets\Scripts\Rain\RainOfBalls.cs" />
      <Compile Include="Assets\Scripts\Randoms.cs" />
      <Compile Include="Assets\Scripts\SpringGrid.cs" />
      <Compile Include="Assets\Scripts\SpringGridBlock.cs" />

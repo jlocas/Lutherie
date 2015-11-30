@@ -1,6 +1,6 @@
 
 # Configuration audio/midi
-idev = 4
+idev = 3
 s = Server()
 s.setMidiInputDevice(idev)
 s.boot()
