@@ -9,15 +9,20 @@ class Controller:
         # On cree OscDataSend une seule fois        
         self.oscsender = OscDataSend("f", self.port, self.addresses)
         
-        self.knobs = [Midictl(ctlnumber=i, minscale=0, maxscale=1) for i in range(18)]
+        #self.knobs = [Midictl(ctlnumber=i, minscale=0, maxscale=1) for i in range(18)]
+        self.knobs = [Midictl(ctlnumber=i, minscale=0, maxscale=1) for i in [74, 71, 11, 9, 86, 88, 20, 22]]
+        [knob.setInterpolation(False) for knob in self.knobs]
 
         # Appelle la fonction qui envoit le message
-        self.tf = [TrigFunc(Change(self.knobs[i]), function=self.send, arg=i) for i in range(18)]
-        
+        #self.tf = [TrigFunc(Change(self.knobs[i]), function=self.send, arg=i) for i in range(18)]
+        self.tf = [TrigFunc(Change(self.knobs[i]), function=self.send, arg=i) for i in range(8)]
+
         #print les messages
         self.debug = False 
         
-        [self.send(i) for i in range(18)]
+        #[self.send(i) for i in range(18)]
+        [self.send(i) for i in range(8)]
+
 
         
     def send(self, which):
@@ -27,6 +32,6 @@ class Controller:
         if(self.debug == True):
             print "{0}: {1}".format(str(self.addresses[which]), str(self.knobs[which].get()))
         
-    def play(self):
+    #def play(self):
         # Appelle la fonction qui envoit le message
-        self.tf = [TrigFunc(Change(self.knobs[i]), function=self.send, arg=i) for i in range(18)]
+        #self.tf = [TrigFunc(Change(self.knobs[i]), function=self.send, arg=i) for i in range(18)]

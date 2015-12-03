@@ -5,6 +5,49 @@ public class Rain : MonoBehaviour {
 
 	public GameObject ballPrefab;
 	public GameObject ballContainer;
+	public SpringGrid grid;
+	public GameObject ballBoxPrefab;
+
+	private Vector2 centerMinBounds;
+	private Vector2 centerMaxBounds;
+
+	private Vector2 boxSize;
+	private Vector2 boxCenter;
+
+	public float CenterX{
+		get {
+			return boxCenter.x;
+		}
+		set
+	}
+
+
+
+	void CalculateBounds(){
+		centerMinBounds.x = Mathf.Max(0, ) 
+	}
+
+
+	minBounds.x = Mathf.Max(0, CenterX - SizeX * 0.5f);
+	minBounds.y = Mathf.Max(0, CenterY - SizeY * 0.5f);
+	
+	maxBounds.x = Mathf.Min(springGrid.GetSideLength(), CenterX + SizeX * 0.5f);
+	maxBounds.y = Mathf.Min(springGrid.GetSideLength(), CenterY + SizeY * 0.5f);
+	
+	widthHalf = (maxBounds.x - minBounds.x) * 0.5f;
+	heightHalf = (maxBounds.y - minBounds.y) * 0.5f;
+
+
+
+
+
+
+}
+
+/*public class Rain : MonoBehaviour {
+
+	public GameObject ballPrefab;
+	public GameObject ballContainer;
 	public SpringGrid springGrid;
 	public GameObject ballBoxPrefab;
 
@@ -19,9 +62,8 @@ public class Rain : MonoBehaviour {
 		}
 		set{
 			center.x = Mathf.Clamp01(value);
-			realCenter.x = center.x * (springGrid.GetSideLength() - 1);
+			realCenter.x = center.x * (springGrid.GetSideLength() - 2) + 1; 
 			moveBallBox = true;
-			CalculateBounds();
 		}
 	}
 
@@ -31,9 +73,8 @@ public class Rain : MonoBehaviour {
 		}
 		set{
 			center.y = Mathf.Clamp01(value);
-			realCenter.y = center.y * (springGrid.GetSideLength() - 1);
+			realCenter.y = center.y * (springGrid.GetSideLength() - 2) + 1;
 			moveBallBox = true;
-			CalculateBounds();
 		}
 	}
 
@@ -41,6 +82,8 @@ public class Rain : MonoBehaviour {
 	private Vector2 realSize;
 	public Vector2 minBounds;
 	public Vector2 maxBounds;
+	float widthHalf;
+	float heightHalf;
 
 	public float SizeX{
 		get{
@@ -49,8 +92,8 @@ public class Rain : MonoBehaviour {
 		set{
 			size.x = Mathf.Clamp01(value);
 			realSize.x = size.x * (springGrid.GetSideLength() - 1) + 1;
+			CalculateBounds();			
 			scaleBallBox = true;
-			CalculateBounds();
 		}
 	}
 
@@ -61,8 +104,8 @@ public class Rain : MonoBehaviour {
 		set{
 			size.y = Mathf.Clamp01(value);
 			realSize.y = size.y * (springGrid.GetSideLength() - 1) + 1;
+			CalculateBounds();			
 			scaleBallBox = true;
-			CalculateBounds();
 		}
 	}
 
@@ -87,7 +130,22 @@ public class Rain : MonoBehaviour {
 	void UpdateBallBoxPos(){
 
 		if(moveBallBox){
-			Vector3 targetPos = new Vector3(realCenter.x, 2f, realCenter.y);
+
+
+			Vector3 targetPos = new Vector3(CenterX, 0.5f, CenterY);
+
+			if(CenterX - widthHalf < 0){
+				targetPos.x = widthHalf;
+			} else if (CenterX + widthHalf > springGrid.GetSideLength()){
+				targetPos.x = springGrid.GetSideLength() - 1 - widthHalf;
+			}
+
+			if (CenterY - heightHalf < 0){
+				targetPos.z = heightHalf;
+			} else if (CenterY + heightHalf > springGrid.GetSideLength()){
+				targetPos.z = springGrid.GetSideLength() - 1 - heightHalf;
+			}
+
 
 			if(Vector3.Distance(ballBox.transform.position, targetPos) <= 0.05f){
 				ballBox.transform.position = targetPos;
@@ -101,6 +159,18 @@ public class Rain : MonoBehaviour {
 	void UpdateBallBoxScale(){
 		if(scaleBallBox){
 			Vector3 targetScale = new Vector3(maxBounds.x - minBounds.x + 1f, maxBounds.y - minBounds.y + 1f, 1f);
+
+			if(CenterX - widthHalf < 0){
+				targetScale.x = widthHalf;
+			} else if(CenterX + widthHalf > springGrid.GetSideLength()){
+				targetScale.x = springGrid.GetSideLength() - 1 - widthHalf;
+			}
+
+			if (CenterY - heightHalf < 0){
+				targetScale.z = heightHalf;
+			} else if (CenterY + heightHalf > springGrid.GetSideLength()){
+				targetScale.z = springGrid.GetSideLength() - 1 - heightHalf;
+			}
 			
 			if(Vector3.Distance(ballBox.transform.localScale, targetScale) <= 0.05f){
 				ballBox.transform.localScale = targetScale;
@@ -118,5 +188,8 @@ public class Rain : MonoBehaviour {
 		maxBounds.x = Mathf.Min(springGrid.GetSideLength(), CenterX + SizeX * 0.5f);
 		maxBounds.y = Mathf.Min(springGrid.GetSideLength(), CenterY + SizeY * 0.5f);
 
+		widthHalf = (maxBounds.x - minBounds.x) * 0.5f;
+		heightHalf = (maxBounds.y - minBounds.y) * 0.5f;
+
 	}
-}
+}*/

@@ -5,7 +5,7 @@ from Controller import *
 import sys
 
 s = Server(sr=44100, nchnls=2, buffersize=512, duplex=1)
-s.setMidiInputDevice(3)
+s.setMidiInputDevice(1)
 s.boot().start()
 
 #gridLength = int(sys.argv[1])
@@ -14,8 +14,8 @@ blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLeng
 syn = SpringGridSynth(length=gridLength)
 
 con = Controller()
-#con.debug = True
-con.play()
+con.debug = False
+#con.play()
 
 #receive OSC for cube sections and how to handle synths
 def OSC(address, *args):
