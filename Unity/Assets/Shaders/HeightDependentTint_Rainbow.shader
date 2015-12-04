@@ -18,6 +18,7 @@
      _Color5 ("Tint Color At 5", Color) = (1,1,1,1)
      _Color6 ("Tint Color At 6", Color) = (0,0,0,1)
      _Color7 ("Tint Color At 7", Color) = (1,1,1,1)
+     
    }
   
    SubShader
@@ -43,7 +44,7 @@
      float _Height5;
      float _Height6;
      float _Height7;
-  
+       
      struct Input
      {
        float2 uv_MainTex;
