@@ -6,36 +6,82 @@ public class Rain : MonoBehaviour {
 	public GameObject ballPrefab;
 	public GameObject ballContainer;
 	public SpringGrid grid;
-	public GameObject ballBoxPrefab;
+	public GameObject ballBoundsPrefab;
+	GameObject boundsGo;
+	RainBounds bounds;
+	
 
-	private Vector2 centerMinBounds;
-	private Vector2 centerMaxBounds;
+	
+	public Vector2 size;
+	private Vector2 realSize;
 
-	private Vector2 boxSize;
-	private Vector2 boxCenter;
-
-	public float CenterX{
+	public float SizeX {
 		get {
-			return boxCenter.x;
+			return realSize.x;
 		}
-		set
+		set {
+			size.x = value;
+			realSize.x = size.x * (grid.GetSideLength() - 1) + 1; //+1 because we want a size of zero to cover 1 block
+			bounds.SizeX = SizeX;
+		}
+	}
+	
+	public float SizeZ {
+		get {
+			return realSize.y;
+		}
+		set {
+			size.y = value;
+			realSize.y = size.y * (grid.GetSideLength() - 1) + 1; //+1 because we want a size of zero to cover 1 block
+			bounds.SizeZ = SizeZ;
+		}
 	}
 
+	public Vector2 center;
+	private Vector2 realCenter;
+	
+	public float CenterX{
+		get{
+			return realCenter.x;
+		}
+		set{
+			center.x = value;
+			realCenter.x = center.x * (grid.GetSideLength() - 2) + 1; 		
+			bounds.CenterX = CenterX;
+		}
+	}
+	
+	public float CenterZ{
+		get{
+			return realCenter.y;
+		}
+		set{
+			center.y = value;
+			realCenter.y = center.y * (grid.GetSideLength() - 2) + 1;
+			bounds.CenterZ = CenterZ;
+		}
+	}
+
+	void Awake(){
+		boundsGo = Instantiate(ballBoundsPrefab, new Vector3(0, 0.5f, 0), Quaternion.identity) as GameObject;
+		bounds = boundsGo.GetComponent<RainBounds>();
+		bounds.RangeCenter = grid.GetSideLength() * 0.5f - 1;
+		bounds.gridSize = grid.GetSideLength();
+	}
 
 
 	void CalculateBounds(){
-		centerMinBounds.x = Mathf.Max(0, ) 
 	}
 
 
-	minBounds.x = Mathf.Max(0, CenterX - SizeX * 0.5f);
+	/*minBounds.x = Mathf.Max(0, CenterX - SizeX * 0.5f);
 	minBounds.y = Mathf.Max(0, CenterY - SizeY * 0.5f);
 	
 	maxBounds.x = Mathf.Min(springGrid.GetSideLength(), CenterX + SizeX * 0.5f);
 	maxBounds.y = Mathf.Min(springGrid.GetSideLength(), CenterY + SizeY * 0.5f);
 	
 	widthHalf = (maxBounds.x - minBounds.x) * 0.5f;
-	heightHalf = (maxBounds.y - minBounds.y) * 0.5f;
+	heightHalf = (maxBounds.y - minBounds.y) * 0.5f;*/
 
 
 

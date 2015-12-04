@@ -24,8 +24,7 @@ public enum MappedParameter
 public enum Form
 {
 	Lin,
-	Exp,
-	Pow
+	Exp
 }
 
 [System.Serializable]
@@ -85,16 +84,16 @@ public class MidiController {
 			//rain.ballSize.min = Value;
 			break;
 		case MappedParameter.Balls_XPos:
-			rain.CenterX = Value;
+			//rain.CenterX = Value;
 			break;
 		case MappedParameter.Balls_XSize:
 			rain.SizeX = Value;
 			break;
 		case MappedParameter.Balls_ZPos:
-			rain.CenterY = Value;
+			//rain.CenterY = Value;
 			break;
 		case MappedParameter.Balls_ZSize:
-			rain.SizeY = Value;
+			rain.SizeZ = Value;
 			break;
 		case MappedParameter.Springs_FreezeEdges:
 			grid.freezeEdges = Mathf.RoundToInt(Value) == 0 ? false : true;
@@ -133,9 +132,6 @@ public class MidiController {
 			break;
 		case Form.Exp:
 			v = Mathf.Pow(formArg, v);
-			break;
-		case Form.Pow:
-			v = Mathf.Pow(v, formArg);
 			break;
 		}
 		return v;

@@ -19,8 +19,8 @@ public class Ball : MonoBehaviour {
 
 		if(!hasParticles)
 		{
-			newParticles = Instantiate(particles, gameObject.transform.position, Quaternion.identity) as GameObject;
-			hasParticles = true;
+			/*newParticles = Instantiate(particles, gameObject.transform.position, Quaternion.identity) as GameObject;
+			hasParticles = true;*/
 			//newParticles.transform.SetParent(particleContainer.transform);
 		}
 		col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, force) );
