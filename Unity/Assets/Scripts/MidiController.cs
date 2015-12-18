@@ -84,13 +84,13 @@ public class MidiController {
 			//rain.ballSize.min = Value;
 			break;
 		case MappedParameter.Balls_XPos:
-			//rain.CenterX = Value;
+			rain.CenterX = Value;
 			break;
 		case MappedParameter.Balls_XSize:
 			rain.SizeX = Value;
 			break;
 		case MappedParameter.Balls_ZPos:
-			//rain.CenterY = Value;
+			rain.CenterZ = Value;
 			break;
 		case MappedParameter.Balls_ZSize:
 			rain.SizeZ = Value;

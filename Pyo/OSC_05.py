@@ -5,11 +5,11 @@ from Controller import *
 import sys
 
 s = Server(sr=44100, nchnls=2, buffersize=512, duplex=1)
-s.setMidiInputDevice(99)
+s.setMidiInputDevice(3)
 s.boot().start()
 
-gridLength = int(sys.argv[1])
-#gridLength = 8
+#gridLength = int(sys.argv[1])
+gridLength = 8
 blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLength)]
 syn = SpringGridSynth(length=gridLength)
 

@@ -20,9 +20,7 @@ public class Rain : MonoBehaviour {
 			return realSize.x;
 		}
 		set {
-			size.x = value;
-			realSize.x = size.x * (grid.GetSideLength() - 1) + 1; //+1 because we want a size of zero to cover 1 block
-			bounds.SizeX = SizeX;
+			bounds.SizeX = value;
 		}
 	}
 	
@@ -31,9 +29,7 @@ public class Rain : MonoBehaviour {
 			return realSize.y;
 		}
 		set {
-			size.y = value;
-			realSize.y = size.y * (grid.GetSideLength() - 1) + 1; //+1 because we want a size of zero to cover 1 block
-			bounds.SizeZ = SizeZ;
+			bounds.SizeZ = value;
 		}
 	}
 
@@ -44,10 +40,8 @@ public class Rain : MonoBehaviour {
 		get{
 			return realCenter.x;
 		}
-		set{
-			center.x = value;
-			realCenter.x = center.x * (grid.GetSideLength() - 2) + 1; 		
-			bounds.CenterX = CenterX;
+		set{	
+			bounds.CenterX = value;
 		}
 	}
 	
@@ -56,9 +50,7 @@ public class Rain : MonoBehaviour {
 			return realCenter.y;
 		}
 		set{
-			center.y = value;
-			realCenter.y = center.y * (grid.GetSideLength() - 2) + 1;
-			bounds.CenterZ = CenterZ;
+			bounds.CenterZ = value;
 		}
 	}
 
@@ -66,7 +58,7 @@ public class Rain : MonoBehaviour {
 		boundsGo = Instantiate(ballBoundsPrefab, new Vector3(0, 0.5f, 0), Quaternion.identity) as GameObject;
 		bounds = boundsGo.GetComponent<RainBounds>();
 		bounds.RangeCenter = grid.GetSideLength() * 0.5f - 1;
-		bounds.gridSize = grid.GetSideLength();
+		bounds.gridSize = (float)grid.GetSideLength();
 	}
 
 
