@@ -177,6 +177,9 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
      <None Include="Assets\ShaderForge\Editor\InternalResources\Shader Presets\PresetSky.shader" />
+ <Reference Include="UnityEngine.Advertisements">
+ <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -191,6 +194,9 @@
  </Reference>
  <Reference Include="UnityEditor.Networking">
  <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="ShaderForge">
  <HintPath>W:/Projects/Lutherie/Unity/Assets/ShaderForge/Editor/ShaderForge.dll</HintPath>
