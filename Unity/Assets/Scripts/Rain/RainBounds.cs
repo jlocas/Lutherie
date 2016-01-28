@@ -20,9 +20,9 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			size.x = value;
-			realSize.x = size.x * (gridSize - 1) + 1; //+1 because we want a size of zero to cover 1 block
+			realSize.x = size.x * (gridSize - 3) + 1; //+1 because we want a size of zero to cover 1 block
 
-			RangeSizeX = -realSize.x + gridSize;
+			RangeSizeX = -realSize.x + gridSize - 2;
 
 			//reposition if out of bounds
 			if(realCenter.x + realSize.x * 0.5f >= gridSize - 1 || realCenter.x - realSize.x * 0.5f <= 0){
@@ -40,9 +40,9 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			size.z = value;
-			realSize.z = size.z * (gridSize - 1) + 1; //+1 because we want a size of zero to cover 1 block
+			realSize.z = size.z * (gridSize - 3) + 1; //+1 because we want a size of zero to cover 1 block
 
-			RangeSizeZ = -realSize.z + gridSize;
+			RangeSizeZ = -realSize.z + gridSize - 2;
 
 			//reposition if out of bounds
 			if(realCenter.z + realSize.z * 0.5f >= gridSize - 1 || realCenter.z - realSize.z * 0.5f <= 0){
@@ -65,7 +65,7 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			center.x = value;
-			realCenter.x = center.x * RangeSizeX + (realSize.x * 0.5f) - 0.5f;
+			realCenter.x = center.x * RangeSizeX + (realSize.x * 0.5f) - 0.5f + 1;
 
 			setPos = true; 			//tells the update that we need to set the scale because it changed
 			this.enabled = true; 	//enables Update()
@@ -78,7 +78,7 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			center.z = value;
-			realCenter.z = center.z * RangeSizeZ + (realSize.z * 0.5f) - 0.5f;
+			realCenter.z = center.z * RangeSizeZ + (realSize.z * 0.5f) - 0.5f + 1;
 
 			setPos = true; 			//tells the update that we need to set the scale because it changed
 			this.enabled = true; 	//enables Update()
@@ -128,12 +128,13 @@ public class RainBounds : MonoBehaviour {
 
 	public Vector3 GetBallPosition(){
 		Vector3 pos = new Vector3(0f,50f,0f);
-		pos.x = realSize.x;
-		pos.z = realSize.z;
+		pos.x = realCenter.x + Random.Range(realSize.x * -0.5f, realSize.x * 0.5f);
+		pos.z = realCenter.z + Random.Range(realSize.z * -0.5f, realSize.z * 0.5f);
 		return pos;
 	}
 
 	void Awake(){
+		//for debugging
 		//rangeGO = Instantiate(rangePrefab, new Vector3(rangeCenter, 0.5f, rangeCenter), Quaternion.identity) as GameObject;
 		realSize = new Vector3(0f,1f,0f);
 		realCenter = new Vector3(0f,0.5f,0f);

@@ -3,13 +3,20 @@ using System.Collections;
 
 public enum MappedParameter
 {
-	Balls_XPos,
-	Balls_ZPos,
-	Balls_XSize,
-	Balls_ZSize,
-	Balls_MinMass,
-	Balls_MaxMass,
-	Balls_Frequency,
+	Rain1_XPos,
+	Rain1_ZPos,
+	Rain1_XSize,
+	Rain1_ZSize,
+	Rain1_MinMass,
+	Rain1_MaxMass,
+	Rain1_Frequency,
+	Rain2_XPos,
+	Rain2_ZPos,
+	Rain2_XSize,
+	Rain2_ZSize,
+	Rain2_MinMass,
+	Rain2_MaxMass,
+	Rain2_Frequency,
 	Springs_XSpring,
 	Springs_YSpring,
 	Springs_ZSpring,
@@ -45,13 +52,23 @@ public class MidiController {
 		}
 	}
 
-	Rain rain;
-	public Rain BallRain{
+	Rain rain1;
+	public Rain BallRain1 {
 		get{
-			return rain;
+			return rain1;
 		}
 		set{
-			rain = value;
+			rain1 = value;
+		}
+	}
+
+	Rain rain2;
+	public Rain BallRain2 {
+		get{
+			return rain2;
+		}
+		set{
+			rain2 = value;
 		}
 	}
 
@@ -75,26 +92,41 @@ public class MidiController {
 	public void Send()	{
 		switch(parameter)
 		{
-		case MappedParameter.Balls_Frequency:
+		case MappedParameter.Rain1_Frequency:
 			break;
-		case MappedParameter.Balls_MaxMass:
+		case MappedParameter.Rain1_MaxMass:
 			//rain.ballSize.max = Value;
 			break;
-		case MappedParameter.Balls_MinMass:
+		case MappedParameter.Rain1_MinMass:
 			//rain.ballSize.min = Value;
 			break;
-		case MappedParameter.Balls_XPos:
-			rain.CenterX = Value;
+
+		case MappedParameter.Rain1_XPos:
+			rain1.CenterX = Value;
 			break;
-		case MappedParameter.Balls_XSize:
-			rain.SizeX = Value;
+		case MappedParameter.Rain1_XSize:
+			rain1.SizeX = Value;
 			break;
-		case MappedParameter.Balls_ZPos:
-			rain.CenterZ = Value;
+		case MappedParameter.Rain1_ZPos:
+			rain1.CenterZ = Value;
 			break;
-		case MappedParameter.Balls_ZSize:
-			rain.SizeZ = Value;
+		case MappedParameter.Rain1_ZSize:
+			rain1.SizeZ = Value;
 			break;
+
+		case MappedParameter.Rain2_XPos:
+			rain2.CenterX = Value;
+			break;
+		case MappedParameter.Rain2_XSize:
+			rain2.SizeX = Value;
+			break;
+		case MappedParameter.Rain2_ZPos:
+			rain2.CenterZ = Value;
+			break;
+		case MappedParameter.Rain2_ZSize:
+			rain2.SizeZ = Value;
+			break;
+
 		case MappedParameter.Springs_FreezeEdges:
 			grid.freezeEdges = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;

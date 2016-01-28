@@ -20,9 +20,9 @@ class Controller:
             [self.send(i) for i in range(18)]
         
         elif config == 1:
-            self.tf = [TrigFunc(Change(self.knobs[i]), function=self.send, arg=i) for i in range(8)]     
             # Appelle la fonction qui envoit le message
             self.ctls = [Midictl(ctlnumber=i, minscale=0, maxscale=1) for i in [74, 71, 11, 9, 86, 88, 20, 22]]
+            self.tf = [TrigFunc(Change(self.ctls[i]), function=self.send, arg=i) for i in range(8)]     
             [self.send(i) for i in range(8)]
 
         
