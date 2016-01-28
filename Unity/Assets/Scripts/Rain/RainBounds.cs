@@ -5,41 +5,32 @@ public class RainBounds : MonoBehaviour {
 
 	public float gridSize;
 	public GameObject rangePrefab;
+	public ParticleSystem particles;
 	private GameObject rangeGO;
 
-	private Vector3 startSize;
-	private Vector3 startPos;
 
-	public bool lerpSize = false;
-	public bool lerpPos = false;
+	private bool setScale = false;
+	private Vector3 realSize; 		//size in the world, between 1 and grid size
+	private Vector3 size; 			//controller value, between 0 and 1
+	private Material mat;
 
-	//for scale and pos lerps
-	private float slDistance = 0f;
-	private float plDistance = 0f;
-
-	private float lerpSpeed = 0.5f;
-
-
-	public Vector3 size;
-	private Vector3 realSize;
 	public float SizeX {
 		get {
 			return size.x;
 		}
 		set {
-			startSize.x = realSize.x; // for lerp
 			size.x = value;
 			realSize.x = size.x * (gridSize - 1) + 1; //+1 because we want a size of zero to cover 1 block
 
 			RangeSizeX = -realSize.x + gridSize;
 
+			//reposition if out of bounds
 			if(realCenter.x + realSize.x * 0.5f >= gridSize - 1 || realCenter.x - realSize.x * 0.5f <= 0){
-				CenterX = center.x;
-				//SetPos(realCenter);
+				CenterX = center.x; //this works because center depends on rangeSize, which we set just above
 			}
 
-			slDistance = Vector3.Distance(gameObject.transform.localScale, realSize);
-			lerpSize = true;
+			setScale = true; 		//tells the update that we need to set the position because it changed
+			this.enabled = true; 	//enables Update()
 		}
 	}
 
@@ -48,36 +39,36 @@ public class RainBounds : MonoBehaviour {
 			return size.z;
 		}
 		set {
-			startSize.z = realSize.z; // for lerp
 			size.z = value;
-			realSize.z = value * (gridSize - 1) + 1; //+1 because we want a size of zero to cover 1 block
+			realSize.z = size.z * (gridSize - 1) + 1; //+1 because we want a size of zero to cover 1 block
 
 			RangeSizeZ = -realSize.z + gridSize;
 
+			//reposition if out of bounds
 			if(realCenter.z + realSize.z * 0.5f >= gridSize - 1 || realCenter.z - realSize.z * 0.5f <= 0){
-				CenterZ = center.z;
-				//SetPos(realCenter);
+				CenterZ = center.z;	//this works because center depends on rangeSize, which we set just above
 			}
 
-			slDistance = Vector3.Distance(gameObject.transform.localScale, realSize);
-			lerpSize = true;
+			setScale = true; 		//tells the update that we need to set the position because it changed
+			this.enabled = true; 	//enables Update()
 		}
 	}
 	
 
-	public Vector3 center;
-	private Vector3 realCenter;
+	private bool setPos = false;
+	private Vector3 realCenter;		//position in the world, between 0 and gridsize - 1
+	private Vector3 center;			//controller value, between 0 and 1
+
 	public float CenterX {
 		get {
 			return center.x;
 		}
 		set {
-			startPos.x = center.x;
 			center.x = value;
-			realCenter.x = value * RangeSizeX + (realSize.x * 0.5f) - 0.5f;
+			realCenter.x = center.x * RangeSizeX + (realSize.x * 0.5f) - 0.5f;
 
-			plDistance = Vector3.Distance(gameObject.transform.position, realCenter);
-			lerpPos = true;
+			setPos = true; 			//tells the update that we need to set the scale because it changed
+			this.enabled = true; 	//enables Update()
 		}
 	}
 
@@ -86,12 +77,11 @@ public class RainBounds : MonoBehaviour {
 			return center.z;
 		}
 		set {
-			startPos.z = center.z;
 			center.z = value;
-			realCenter.z = value * RangeSizeZ + (realSize.z * 0.5f) - 0.5f;
+			realCenter.z = center.z * RangeSizeZ + (realSize.z * 0.5f) - 0.5f;
 
-			plDistance = Vector3.Distance(gameObject.transform.position, realCenter);
-			lerpPos = true;
+			setPos = true; 			//tells the update that we need to set the scale because it changed
+			this.enabled = true; 	//enables Update()
 		}
 	}
 
@@ -102,7 +92,7 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			rangeCenter = value;
-			SetRangePos(rangeCenter);
+			//SetRangePos(rangeCenter);
 		}
 	}
 
@@ -114,7 +104,7 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			rangeSize.x = value;
-			SetRangeScale(rangeSize);
+			//SetRangeScale(rangeSize);
 		}
 	}
 
@@ -124,7 +114,7 @@ public class RainBounds : MonoBehaviour {
 		}
 		set {
 			rangeSize.z = value;
-			SetRangeScale(rangeSize);
+			//SetRangeScale(rangeSize);
 		}
 	}
 
@@ -136,45 +126,128 @@ public class RainBounds : MonoBehaviour {
 		rangeGO.transform.position = new Vector3(p, 0.5f, p);
 	}
 
-	private void UpdateScale(){
-		if(lerpSize){
-			float t = Mathf.SmoothStep(0f, 1f, slDistance / Vector3.Distance(gameObject.transform.localScale, realSize));
-
-			gameObject.transform.localScale = Vector3.Lerp(startSize, realSize, t);
-
-			if(Vector3.Distance(gameObject.transform.localScale, realSize) == 0f){
-				lerpSize = false;
-			}
-		}
-	}
-
-	private void UpdatePos(){
-		if(lerpPos){
-			float t = Mathf.SmoothStep(0f, 1f, plDistance / Vector3.Distance(gameObject.transform.position, realCenter));
-			
-			gameObject.transform.position = Vector3.Lerp(startPos, realCenter, t);
-			
-			if(Vector3.Distance(gameObject.transform.position, realCenter) == 0f){
-				lerpSize = false;
-			}
-		}
+	public Vector3 GetBallPosition(){
+		Vector3 pos = new Vector3(0f,50f,0f);
+		pos.x = realSize.x;
+		pos.z = realSize.z;
+		return pos;
 	}
 
 	void Awake(){
-		rangeGO = Instantiate(rangePrefab, new Vector3(rangeCenter, 0.5f, rangeCenter), Quaternion.identity) as GameObject;
-		startSize = new Vector3(0f,1f,0f);
-		startPos = new Vector3(0f,0.5f,0f);
+		//rangeGO = Instantiate(rangePrefab, new Vector3(rangeCenter, 0.5f, rangeCenter), Quaternion.identity) as GameObject;
 		realSize = new Vector3(0f,1f,0f);
 		realCenter = new Vector3(0f,0.5f,0f);
+		mat = gameObject.GetComponent<MeshRenderer>().material;
+	}
 
-		CenterX = 0.5f;
-		CenterZ = 0.5f;
-		SizeX = 1;
-		SizeZ = 1;
+
+
+
+	/*
+	 * ************************************************************************************************************************************************************
+	 * ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	
+	 * ************************************************************************************************************************************************************
+	 * ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	ALL THE LERPS	
+	 * ************************************************************************************************************************************************************
+	 */
+
+	public float lerpSpeed = 1f;
+	public float lerpSnapDist = 0.1f;
+	public bool isAppearing = false;
+	public bool isDisappearing = false;
+	public bool isHolding = false;
+	public float opacityLerpTime = 1f;
+	private float opacityLerpCurrentTime;
+	public float opacityHoldTime = 2f;
+	public float opacity;
+
+	
+	void LerpScale(){
+
+		if(setScale){
+			gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, realSize, Time.deltaTime * lerpSpeed);
+			mat.SetFloat("_Scale", ((realSize.x + realSize.z) * 0.5f) / (float)gridSize);
+			
+			if(Vector3.Distance(gameObject.transform.localScale, realSize) < lerpSnapDist){
+				gameObject.transform.localScale = realSize;
+				setScale = false;
+			}
+		}
+	}
+
+	void LerpPosition(){
+
+		if(setPos){
+			gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, realCenter, Time.deltaTime * lerpSpeed);
+			
+			if(Vector3.Distance(gameObject.transform.position, realCenter) < lerpSnapDist){
+				gameObject.transform.position = realCenter;
+				setPos = false;
+			}
+		}
+	}
+
+	void LerpOpacity(){
+			
+		float lerpStart = opacity; //so the lerp doesnt start at 0 when opacity is greater than 0
+		
+		if((setPos || setScale) && !isAppearing){
+			isAppearing = true;
+			isDisappearing = false;
+			isHolding = false;
+			opacityLerpCurrentTime = 0f;	//timer 
+		}
+		
+		//Apparition
+		if(isAppearing){
+			float t = 0f;
+			opacityLerpCurrentTime += Time.deltaTime;
+			t = Mathf.Clamp01(opacityLerpCurrentTime / opacityLerpTime);
+			
+			opacity = Mathf.Lerp(lerpStart, 1f, t);
+			
+			if(t == 1){
+				isHolding = true;
+				opacityLerpCurrentTime = 0f;
+				isAppearing = false;
+			}
+		}
+		
+		if(isHolding){
+			opacityLerpCurrentTime += Time.deltaTime;
+			
+			if(opacityLerpCurrentTime >= opacityHoldTime){
+				opacityLerpCurrentTime = 0f;
+				isDisappearing = true;
+				isHolding = false;
+			}
+		}
+		
+		if(isDisappearing){
+			float t = 0f;
+			opacityLerpCurrentTime += Time.deltaTime;
+			t = Mathf.Clamp01(opacityLerpCurrentTime / opacityLerpTime);
+			
+			opacity = Mathf.Lerp(1f, 0f, t);
+			
+			if(t == 1){
+				opacityLerpCurrentTime = 0f;
+				isDisappearing = false;
+			}
+		}
+		
+		mat.SetFloat("_DissolveAmount", opacity);
+
 	}
 
 	void Update(){
-		UpdateScale();
-		UpdatePos();
+
+		LerpPosition();
+		LerpScale();
+		LerpOpacity();
+
+		if(!setPos && !setScale && opacity == 0f){
+				this.enabled = false; //disable Update() if setPos and setScale are false
+		}
 	}
 }

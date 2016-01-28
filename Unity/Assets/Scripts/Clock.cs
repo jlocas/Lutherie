@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum NoteValues{
- 	ronde, blanche, noire, croche, doubleCroche
-}
 
-[System.Serializable]
 public class Clock : MonoBehaviour {
 	
 	public float bpm;

@@ -9,7 +9,6 @@ public class OLDRain : MonoBehaviour {
 	public Clock clock;
 	public GameObject ballBoxPrefab;
 
-	public NoteValues noteValues;
 
 	[Space(20)]
 	public Vector2 center;
