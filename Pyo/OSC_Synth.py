@@ -12,8 +12,9 @@ class SpringGridSynth:
         self.length = length
         self.size = self.length*self.length
     
-
         self.freqBank = [[0 for x in range(self.length)] for z in range(self.length)]
+        self.midi = RawMidi(self.UpdateNotes)
+
 
         self.posInst_octave = 3
         self.posInst_freqs = [SigTo(value=100, time=0.1, init=100) for i in range(self.size)]
@@ -80,6 +81,12 @@ class SpringGridSynth:
                 self.posInst_freqBank[x][z] = self.freqBank[x][z] * math.pow(2, self.posInst_octave)
                 self.velInst_freqBank[x][z] = self.freqBank[x][z] * math.pow(2, self.velInst_octave)
                 self.fm_freqBank[x][z] = self.freqBank[x][z] * math.pow(2, self.fm_octave)
+
+    def UpdateNotes(self, status, data1, data2):
+        
+        print status, data1, data2
+
+
 
 
     def out(self):
