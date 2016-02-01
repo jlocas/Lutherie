@@ -7,16 +7,16 @@ public enum MappedParameter
 	Rain1_ZPos,
 	Rain1_XSize,
 	Rain1_ZSize,
-	Rain1_MinMass,
-	Rain1_MaxMass,
+	Rain1_BallForce,
 	Rain1_Frequency,
+	Rain1_SpawnBalls,
 	Rain2_XPos,
 	Rain2_ZPos,
 	Rain2_XSize,
 	Rain2_ZSize,
-	Rain2_MinMass,
-	Rain2_MaxMass,
+	Rain2_BallForce,
 	Rain2_Frequency,
+	Rain2_SpawnBalls,
 	Springs_XSpring,
 	Springs_YSpring,
 	Springs_ZSpring,
@@ -94,13 +94,12 @@ public class MidiController {
 		{
 		case MappedParameter.Rain1_Frequency:
 			break;
-		case MappedParameter.Rain1_MaxMass:
-			//rain.ballSize.max = Value;
+		case MappedParameter.Rain1_SpawnBalls:
+			rain1.SpawnBalls = Value;
 			break;
-		case MappedParameter.Rain1_MinMass:
-			//rain.ballSize.min = Value;
+		case MappedParameter.Rain1_BallForce:
+			rain1.BallForce = Value;
 			break;
-
 		case MappedParameter.Rain1_XPos:
 			rain1.CenterX = Value;
 			break;
@@ -114,6 +113,12 @@ public class MidiController {
 			rain1.SizeZ = Value;
 			break;
 
+		case MappedParameter.Rain2_SpawnBalls:
+			rain2.SpawnBalls = Value;
+			break;
+		case MappedParameter.Rain2_BallForce:
+			rain2.BallForce = Value;
+			break;
 		case MappedParameter.Rain2_XPos:
 			rain2.CenterX = Value;
 			break;
