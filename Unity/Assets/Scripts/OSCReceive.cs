@@ -109,6 +109,42 @@ public class OSCReceive : MonoBehaviour {
 			controlMapper.ctl17.Value = dat;
 			controlMapper.ctl17.Send();
 			break;
+		case "/controller/18":
+			controlMapper.ctl18.Value = dat;
+			controlMapper.ctl18.Send();
+			break;
+		case "/controller/19":
+			controlMapper.ctl19.Value = dat;
+			controlMapper.ctl19.Send();
+			break;
+		case "/controller/20":
+			controlMapper.ctl20.Value = dat;
+			controlMapper.ctl20.Send();
+			break;
+		case "/controller/21":
+			controlMapper.ctl21.Value = dat;
+			controlMapper.ctl21.Send();
+			break;
+		case "/controller/22":
+			controlMapper.ctl22.Value = dat;
+			controlMapper.ctl22.Send();
+			break;
+		case "/controller/23":
+			controlMapper.ctl23.Value = dat;
+			controlMapper.ctl23.Send();
+			break;
+		case "/controller/24":
+			controlMapper.ctl24.Value = dat;
+			controlMapper.ctl24.Send();
+			break;
+		case "/controller/25":
+			controlMapper.ctl25.Value = dat;
+			controlMapper.ctl25.Send();
+			break;
+		case "/controller/26":
+			controlMapper.ctl26.Value = dat;
+			controlMapper.ctl26.Send();
+			break;
 		default:
 			Debug.Log("OSCReceive: Unknown address");
 			break;

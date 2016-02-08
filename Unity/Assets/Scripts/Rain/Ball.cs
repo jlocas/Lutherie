@@ -27,9 +27,9 @@ public class Ball : MonoBehaviour {
 		Destroy(gameObject);
 	}
 
-	public void SetParticleContainer(GameObject contain)
+	public void SetParticleContainer(GameObject ctr)
 	{
-		particleContainer = contain;
+		particleContainer = ctr;
 	}
 
 	private Vector3 MultiplyVelocity(Vector3 vel, float mul)

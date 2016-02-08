@@ -11,17 +11,14 @@ public class Rain : MonoBehaviour {
 	GameObject boundsGo;
 	RainBounds bounds;
 	[Space(20)]
-	public bool spawnBalls;
 	private int oldClockVal;
 	
 
 	
-	public Vector2 size;
-	private Vector2 realSize;
-
+	public Vector3 size;
 	public float SizeX {
 		get {
-			return realSize.x;
+			return size.x;
 		}
 		set {
 			bounds.SizeX = value;
@@ -30,19 +27,17 @@ public class Rain : MonoBehaviour {
 	
 	public float SizeZ {
 		get {
-			return realSize.y;
+			return size.z;
 		}
 		set {
 			bounds.SizeZ = value;
 		}
 	}
 
-	public Vector2 center;
-	private Vector2 realCenter;
-	
+	public Vector3 center;
 	public float CenterX{
 		get{
-			return realCenter.x;
+			return center.x;
 		}
 		set{	
 			bounds.CenterX = value;
@@ -51,18 +46,37 @@ public class Rain : MonoBehaviour {
 	
 	public float CenterZ{
 		get{
-			return realCenter.y;
+			return center.z;
 		}
 		set{
 			bounds.CenterZ = value;
 		}
 	}
 
+	public float ballForce;
+	public float BallForce{
+		get{
+			return ballForce;
+		}
+		set{
+			ballForce = value;
+		}
+	}
+
+	public bool spawnBalls;
+	public float SpawnBalls{
+		set{
+			if(value > 0){
+				spawnBalls = true;
+			}
+		}
+	}
+	
 	void SpawnBall(){
 		if(spawnBalls){
 			GameObject newBall = Instantiate(ballPrefab, bounds.GetBallPosition(), Quaternion.identity) as GameObject;
 			newBall.transform.parent = ballContainer.transform;
-		}
+			newBall.GetComponent<Ball>().Force = BallForce;		}
 	}
 
 	void Tick(){
@@ -77,6 +91,11 @@ public class Rain : MonoBehaviour {
 		bounds = boundsGo.GetComponent<RainBounds>();
 		bounds.RangeCenter = grid.GetSideLength() * 0.5f - 1;
 		bounds.gridSize = (float)grid.GetSideLength();
+
+		bounds.CenterX = center.x;
+		bounds.CenterZ = center.z;
+		bounds.SizeX = size.x;
+		bounds.SizeZ = size.z;
 	}
 
 	void Update(){

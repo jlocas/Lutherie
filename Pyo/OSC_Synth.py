@@ -13,7 +13,11 @@ class SpringGridSynth:
         self.size = self.length*self.length
     
         self.freqBank = [[0 for x in range(self.length)] for z in range(self.length)]
-        self.midi = RawMidi(self.UpdateNotes)
+        self.midi = RawMidi(self.NewNote)
+        
+        self.notes = []
+        self.noteOns = []
+        self.clearNotes = True
 
 
         self.posInst_octave = 3
@@ -42,7 +46,6 @@ class SpringGridSynth:
         
 
     def Update(self, blocks):
-        
         self.blocks = blocks
 
         i = 0
@@ -70,7 +73,7 @@ class SpringGridSynth:
         self.fm.setCarrier(self.fm_freqs)
         self.fm.setMul(self.fm_amps)
         self.fm.setIndex(self.fm_indices)
-        #self.Debug()
+        self.Debug()
                 
     def SetBaseFreqs(self):
 
@@ -82,11 +85,22 @@ class SpringGridSynth:
                 self.velInst_freqBank[x][z] = self.freqBank[x][z] * math.pow(2, self.velInst_octave)
                 self.fm_freqBank[x][z] = self.freqBank[x][z] * math.pow(2, self.fm_octave)
 
-    def UpdateNotes(self, status, data1, data2):
+    def NewNote(self, status, data1, data2):
         
-        print status, data1, data2
+        if status == 145:
+            self.noteOns.append(data1)
 
+            if self.clearNotes:
+                self.notes = []
+                self.clearNotes = False
+                                
+            self.notes.append(data1)
+            self.notes.sort()
 
+        if status == 129: #note off
+            self.noteOns.remove(data1)
+        if not self.noteOns: #no note ons
+            self.clearNotes = True #the notes will be cleared next time we have a note on    
 
 
     def out(self):
@@ -94,13 +108,13 @@ class SpringGridSynth:
         self.output.out()
         return self
 
-    """def Debug(self):
+    def Debug(self):
         if self.debug == True:
             for x in range(self.length):
                 for z in range(self.length):
                     print "Block {0}, {1}: (x = {2}, y = {3}, z = {4})".format(x, z, 
                     self.blocks[x][z].position.x, 
                     self.blocks[x][z].position.y, 
-                    self.blocks[x][z].position.z)"""
+                    self.blocks[x][z].position.z)
         
         

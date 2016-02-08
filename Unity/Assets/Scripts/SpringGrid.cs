@@ -84,6 +84,7 @@ public class SpringGrid : MonoBehaviour {
 		SetupSprings();
 		CreateGroups ();
 		SetFreezeEdges(freezeEdges);
+		SetBlockCollision(blocksCollision);
 	}
 
 	private void CreateBlocks()
@@ -371,7 +372,11 @@ public class SpringGrid : MonoBehaviour {
 	{
 		for(int x = 0; x < sideLength; x++){
 			for(int z = 0; z < sideLength; z++){
-				blocks[x,z].Collider.enabled = tog;
+				if(x == 0 || z == 0 || x == sideLength-1 || z == sideLength-1){
+					blocks[x,z].Collider.enabled = false;
+				} else {
+					blocks[x,z].Collider.enabled = tog;
+				}
 			}
 		}
 	}

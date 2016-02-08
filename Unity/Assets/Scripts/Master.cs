@@ -2,9 +2,15 @@
 using System.Collections;
 using System.Diagnostics;
 
+public enum CurrentConfig{
+	School,
+	Home
+}
+
 public class Master : MonoBehaviour {
 
 	public SpringGrid grid;
+	public CurrentConfig config;
 
 	Process proc;
 	ProcessStartInfo procsi;
@@ -14,10 +20,17 @@ public class Master : MonoBehaviour {
 	void Start () {
 		proc = new Process();
 		procsi = new ProcessStartInfo();
+		string dir = "";
 
-		//procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
-		procsi.WorkingDirectory = @"C:\Users\OPTIMUS\Documents\School\Projetlutherie\Pyo";
-		procsi.FileName = "OSC_05.py";
+		/*if(config == CurrentConfig.Home){
+			dir = @"W:\Projects\Lutherie\Pyo";
+		} else if (config == CurrentConfig.School){
+			dir = @"C:\Users\OPTIMUS\Documents\School\Projetlutherie\Pyo";
+		}*/
+
+		procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
+
+		procsi.FileName = "_Main.py";
 		procsi.Arguments = grid.lengthDiv.ToString();
 
 		proc.StartInfo = procsi;
