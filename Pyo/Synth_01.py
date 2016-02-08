@@ -64,7 +64,8 @@ class SpringGridSynth:
         self.blocksPerNote = self.size / self.notes.length()
             
             
-
+    def FillFreqs(self):
+        
 
     def out(self):
 
