@@ -12,8 +12,8 @@ l = 8
 ll = l/l
 for x in range(l):
     for z in range(l):
-        #print (x * ll)
         pass
+        #print (x * ll)
 
 sh = SynthHub(l)
 
