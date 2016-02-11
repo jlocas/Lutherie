@@ -28,8 +28,8 @@ public class Master : MonoBehaviour {
 			dir = @"C:\Users\OPTIMUS\Documents\School\Projetlutherie\Pyo";
 		}*/
 
-		procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
-
+		//procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
+		procsi.WorkingDirectory = @"C:\Users\OPTIMUS\Documents\School\Lutherie\Pyo";
 		procsi.FileName = "_Main.py";
 		procsi.Arguments = grid.lengthDiv.ToString();
 
