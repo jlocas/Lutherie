@@ -9,6 +9,7 @@ public class OSCSender : MonoBehaviour {
 	public SpringGrid grid;
 	private int gridLength;
 	private int groupsPerSide;
+	int i = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +26,12 @@ public class OSCSender : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		SendBlockGroupData();
+		//SendBlockGroupData();
+		i = (i + 1) % 100;
+
+		if(i == 0){
+			SendBlockGroupData();
+		}
 	}
 
 	private void SendBlockGroupData()
