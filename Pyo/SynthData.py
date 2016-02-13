@@ -1,9 +1,12 @@
 from pyo import *
 
-class SynthData:
+class SynthManager:
     def __init__(self, length, synths):
         self.length = length
-        self.synths = synths
+        
+
+        self.synth1 = FMSynth(length=self.length, octave=4)
+        self.synths = []
 
         #all frequencies from which to choose, will be filled when we play notes
         #self.freqBank = [0]
@@ -12,7 +15,6 @@ class SynthData:
         #the frequency itself, the value that is sent to the synth's SigTo. For each individual block
         self.blockNotes = [[0 for x in range(self.length)] for z in range(self.length)]
         
-        self.midi = RawMidi(self.UpdateNotes)
         self.notes = [0, 4, 7]
         self.noteFreqs = []
         self.noteOns = []
@@ -83,13 +85,10 @@ class SynthData:
 
             if self.clearNotes:
                 self.notes = []
-                #self.freqBank = []
                 self.clearNotes = False
                                 
             self.notes.append(data1)
             self.notes.sort()               
-            #self.freqBank.append(midiToHz(data1))
-            #self.freqBank.sort()
             
             self.UpdateLayout()
             
@@ -98,7 +97,11 @@ class SynthData:
             self.noteOns.remove(data1)
         if not self.noteOns: #if no more note ons, clear the list at the next note
             self.clearNotes = True #the notes will be cleared next time we have a note on 
-            print self.blockIndex
 
             
         ####################################################
+        
+    def UpdateBlocks(self, blocks):
+        #self.synth1.UpdateBlocks(blocks)
+        for i in range(len(self.synths)):
+            self.synths[i].UpdateBlocks(blocks)

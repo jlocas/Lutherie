@@ -68,6 +68,8 @@ public class Rain : MonoBehaviour {
 		set{
 			if(value > 0){
 				spawnBalls = true;
+			} else if(value==0){
+				spawnBalls = false;
 			}
 		}
 	}

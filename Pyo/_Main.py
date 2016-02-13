@@ -6,7 +6,7 @@ from SynthManager import *
 import sys
 
 s = Server(sr=44100, nchnls=2, buffersize=512, duplex=1)
-s.setMidiInputDevice(3)
+s.setMidiInputDevice(4)
 s.boot().start()
 
 
@@ -25,9 +25,8 @@ synman = SynthManager(length=gridLength)
 #receive OSC for cube sections and how to handle synths
 def OSC(address, *args):
     if address == '/springGrid/blockGroups/positions':
-        print "receive!"
-        print args
-        """i = 0
+
+        i = 0
         
         for x in range(gridLength):
             for z in range(gridLength):
@@ -35,14 +34,9 @@ def OSC(address, *args):
                 i+=1
 
         if synman != None:
-            synman.UpdateBlocks(blocks)"""
+            synman.UpdateBlocks(blocks)
             
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC) 
-
-sender = OscDataSend("iiiiiiiii", 12543, "/springGrid/blockGroups/positions")
-msg = [0,0,0,1,0,0,1,0,1]
-
-#sender.send(msg)
 
 s.gui(locals())

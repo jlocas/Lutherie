@@ -26,12 +26,7 @@ public class OSCSender : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		//SendBlockGroupData();
-		i = (i + 1) % 100;
-
-		if(i == 0){
-			SendBlockGroupData();
-		}
+		SendBlockGroupData();
 	}
 
 	private void SendBlockGroupData()

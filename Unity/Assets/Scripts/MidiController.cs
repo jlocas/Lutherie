@@ -39,7 +39,6 @@ public class MidiController {
 
 	public MappedParameter parameter;
 	public Form form;
-	public float formArg;
 
 	SpringGrid grid;
 	public SpringGrid Grid
@@ -168,7 +167,7 @@ public class MidiController {
 		case Form.Lin:
 			break;
 		case Form.Exp:
-			v = Mathf.Pow(formArg, v);
+			v = v*v;
 			break;
 		}
 		return v;
