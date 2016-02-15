@@ -51,4 +51,9 @@ public class OSCSender : MonoBehaviour {
 		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/groupsPerSide", groupsPerSide);
 
 	}
+
+	public void SendBall2Hit(int x, int z){
+		List<int> pos = new List<int>(){x, z};
+		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/rain2/ballHit", pos);
+	}
 }

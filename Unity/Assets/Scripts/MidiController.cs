@@ -10,6 +10,7 @@ public enum MappedParameter
 	Rain1_BallForce,
 	Rain1_Frequency,
 	Rain1_SpawnBalls,
+	Rain1_Spawn1Ball,
 	Rain2_XPos,
 	Rain2_ZPos,
 	Rain2_XSize,
@@ -61,8 +62,8 @@ public class MidiController {
 		}
 	}
 
-	Rain rain2;
-	public Rain BallRain2 {
+	Rain_2 rain2;
+	public Rain_2 BallRain2 {
 		get{
 			return rain2;
 		}
@@ -95,6 +96,9 @@ public class MidiController {
 			break;
 		case MappedParameter.Rain1_SpawnBalls:
 			rain1.SpawnBalls = Value;
+			break;
+		case MappedParameter.Rain1_Spawn1Ball:
+			rain1.Spawn1Ball(Value);
 			break;
 		case MappedParameter.Rain1_BallForce:
 			rain1.BallForce = Value;

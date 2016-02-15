@@ -5,7 +5,7 @@ from Controller import *
 from SynthManager import *
 import sys
 
-s = Server(sr=44100, nchnls=2, buffersize=512, duplex=1)
+s = Server(sr=44100, nchnls=2, buffersize=2048, duplex=1)
 s.setMidiInputDevice(4)
 s.boot().start()
 
@@ -35,6 +35,9 @@ def OSC(address, *args):
 
         if synman != None:
             synman.UpdateBlocks(blocks)
+            
+    if address =='/springGrid/rain2/ballHit':
+        synman.pulsynth.Pulse(args[0], args[1])
             
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC) 

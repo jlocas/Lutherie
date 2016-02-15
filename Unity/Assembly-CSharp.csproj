@@ -54,10 +54,12 @@
      <Compile Include="Assets\Scripts\Pattern.cs" />
      <Compile Include="Assets\Scripts\Rain\Ball.cs" />
      <Compile Include="Assets\Scripts\Rain\BallParticles.cs" />
+     <Compile Include="Assets\Scripts\Rain\Ball_2.cs" />
      <Compile Include="Assets\Scripts\Rain\OLDRain.cs" />
      <Compile Include="Assets\Scripts\Rain\Rain.cs" />
      <Compile Include="Assets\Scripts\Rain\RainBounds.cs" />
      <Compile Include="Assets\Scripts\Rain\RainOfBalls.cs" />
+     <Compile Include="Assets\Scripts\Rain\Rain_2.cs" />
      <Compile Include="Assets\Scripts\Randoms.cs" />
      <Compile Include="Assets\Scripts\SpringGrid.cs" />
      <Compile Include="Assets\Scripts\SpringGridBlock.cs" />
@@ -185,17 +187,11 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
      <None Include="Assets\ShaderForge\Editor\InternalResources\Shader Presets\PresetSky.shader" />
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Analytics">
- <HintPath>W:/Programs/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
  <HintPath>W:/Programs/Unity/Editor/Data/Managed/Mono.Cecil.dll</HintPath>
