@@ -7,6 +7,8 @@ using System.IO;
 public class OSCSender : MonoBehaviour {
 
 	public SpringGrid grid;
+	private float counter;
+	public float delay;
 	private int gridLength;
 	private int groupsPerSide;
 	int i = 0;
@@ -21,12 +23,14 @@ public class OSCSender : MonoBehaviour {
 		OSCHandler.Instance.Init();
 
 		SendGridLength();
+
+		InvokeRepeating("SendBlockGroupData", 1f, 0.05f);
 	
 	}
 
 	// Update is called once per frame
 	void Update () {
-		SendBlockGroupData();
+		//SendBlockGroupData();
 	}
 
 	private void SendBlockGroupData()

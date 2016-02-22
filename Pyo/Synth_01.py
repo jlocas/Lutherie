@@ -65,7 +65,7 @@ class WTSynth:
         
         self.ptr = MatrixPointer(matrix=self.matrix, x=self.x, y=self.z, mul=0.05, add=0)
         self.lpf = Biquadx(input=self.ptr, freq=4000, q=1, type=0, stages=4, mul=1, add=0)
-        self.hpf = Biquadx(input=self.ptr, freq=60, q=2, type=1, stages=2, mul=1, add=0)
+        self.hpf = Biquadx(input=self.ptr, freq=50, q=2, type=1, stages=2, mul=1, add=0)
         
         self.clip = Clip(input=self.hpf, min=-0.9, max=0.9, mul=0.33, add=0)
 
@@ -76,10 +76,10 @@ class WTSynth:
 
         for x in range(self.length):
             for z in range(self.length):
-                self.heights[x][z] = heights[x][z] * 0.3 # *0.3 to diminish clicks when a cube is much higher than its neighbors
+                self.heights[x][z] = heights[x][z]
 
         self.matrix.replace(self.heights)
-        
+
     def UpdateNotes(self, notes):
         self.freq = midiToHz(notes[0] + 12 * self.octave)
         self.randFreq = [Randi(min=self.freq - self.freq*0.01, max=self.freq + self.freq*0.01, freq=.1), Randi(min=self.freq - self.freq*0.01, max=self.freq + self.freq*0.01, freq=.1)]
@@ -106,16 +106,17 @@ class Pulsynth:
         self.octave = octave
         
         self.freqs = [[100 for x in range(self.length)] for z in range(self.length)]
-        self.freq = SigTo(value=1000, time=0.05, init=1000.00, mul=1, add=0)
+        self.freq = SigTo(value=1000, time=0.01, init=1000.00, mul=1, add=0)
         self.env = Adsr(attack=0.01, decay=0.5, sustain=0, release=0.10, dur=0, mul=1, add=0)
         self.src = SineLoop(freq=self.freq, feedback=0, mul=self.env, add=0)
         self.output = self.src
 
 
     def Pulse(self, x, z):
-        self.env.play()
-        self.freq.setValue = self.freqs[x][z]
+        self.freq.setValue(self.freqs[x][z])
         self.src.setFreq(self.freq)
+        self.env.play()
+
 
     def UpdateNotes(self, notes):
         for x in range(self.length):
