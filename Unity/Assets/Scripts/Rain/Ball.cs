@@ -15,16 +15,18 @@ public class Ball : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col)
 	{
-		GameObject newParticles;
-
-		if(!hasParticles)
-		{
-			/*newParticles = Instantiate(particles, gameObject.transform.position, Quaternion.identity) as GameObject;
-			hasParticles = true;*/
-			//newParticles.transform.SetParent(particleContainer.transform);
+		if(col.tag != "Ball"){
+			GameObject newParticles;
+			
+			if(!hasParticles)
+			{
+				newParticles = Instantiate(particles, gameObject.transform.position, Quaternion.identity) as GameObject;
+			hasParticles = true;
+				newParticles.transform.SetParent(particleContainer.transform);
+			}
+			col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, force) );
+			Destroy(gameObject);
 		}
-		col.attachedRigidbody.AddForce( MultiplyVelocity( gameObject.GetComponent<Rigidbody>().velocity, force) );
-		Destroy(gameObject);
 	}
 
 	public void SetParticleContainer(GameObject ctr)

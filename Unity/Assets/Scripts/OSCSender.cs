@@ -7,6 +7,8 @@ using System.IO;
 public class OSCSender : MonoBehaviour {
 
 	public SpringGrid grid;
+	private float counter;
+	public float delay;
 	private int gridLength;
 	private int groupsPerSide;
 	int i = 0;
@@ -21,17 +23,14 @@ public class OSCSender : MonoBehaviour {
 		OSCHandler.Instance.Init();
 
 		SendGridLength();
+
+		InvokeRepeating("SendBlockGroupData", 1f, 0.05f);
 	
 	}
 
 	// Update is called once per frame
 	void Update () {
 		//SendBlockGroupData();
-		i = (i + 1) % 100;
-
-		if(i == 0){
-			SendBlockGroupData();
-		}
 	}
 
 	private void SendBlockGroupData()
@@ -55,5 +54,10 @@ public class OSCSender : MonoBehaviour {
 		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/length", gridLength);
 		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/groupsPerSide", groupsPerSide);
 
+	}
+
+	public void SendBall2Hit(int x, int z){
+		List<int> pos = new List<int>(){x, z};
+		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/rain2/ballHit", pos);
 	}
 }

@@ -5,6 +5,7 @@ public class Rain : MonoBehaviour {
 
 	public GameObject ballPrefab;
 	public GameObject ballContainer;
+	public GameObject ballParticleContainer;
 	public SpringGrid grid;
 	public GameObject ballBoundsPrefab;
 	public Clock clock;
@@ -12,7 +13,7 @@ public class Rain : MonoBehaviour {
 	RainBounds bounds;
 	[Space(20)]
 	private int oldClockVal;
-	
+	private bool ballGate = true;
 
 	
 	public Vector3 size;
@@ -68,15 +69,34 @@ public class Rain : MonoBehaviour {
 		set{
 			if(value > 0){
 				spawnBalls = true;
+			} else if(value==0){
+				spawnBalls = false;
 			}
 		}
+	}
+
+	public void Spawn1Ball(float force){
+
+		if(ballGate){
+			GameObject newBall = Instantiate(ballPrefab, bounds.GetBallPosition(), Quaternion.identity) as GameObject;
+			newBall.transform.parent = ballContainer.transform;
+			newBall.GetComponent<Ball>().particleContainer = ballParticleContainer;
+			newBall.GetComponent<Ball>().Force = BallForce;		
+			ballGate = false;
+		}
+		if(force == 0){
+			ballGate = true;
+		}
+
 	}
 	
 	void SpawnBall(){
 		if(spawnBalls){
 			GameObject newBall = Instantiate(ballPrefab, bounds.GetBallPosition(), Quaternion.identity) as GameObject;
 			newBall.transform.parent = ballContainer.transform;
-			newBall.GetComponent<Ball>().Force = BallForce;		}
+			newBall.GetComponent<Ball>().particleContainer = ballParticleContainer;
+			newBall.GetComponent<Ball>().Force = BallForce;		
+		}
 	}
 
 	void Tick(){
