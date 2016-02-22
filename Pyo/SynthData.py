@@ -3,16 +3,17 @@ from pyo import *
 class SynthData:
     def __init__(self, length, synths):
         self.length = length
+        self.synths = synths
 
         #all frequencies from which to choose, will be filled when we play notes
-        self.freqBank = []
+        #self.freqBank = [0]
         #which index from the freqBank for the block
         self.blockIndex = [[0 for x in range(self.length)] for z in range(self.length)]
         #the frequency itself, the value that is sent to the synth's SigTo. For each individual block
-        self.blockFreqs = [[0 for x in range(self.length)] for z in range(self.length)]
+        self.blockNotes = [[0 for x in range(self.length)] for z in range(self.length)]
         
         self.midi = RawMidi(self.UpdateNotes)
-        self.notes = []
+        self.notes = [0, 4, 7]
         self.noteFreqs = []
         self.noteOns = []
         self.clearNotes = True #to immediately add new notes to the 
@@ -40,19 +41,21 @@ class SynthData:
 
     def UpdateLayout(self):
         
-        if self.freqBank:
+        if self.notes:
             if self.layout == "hor":
                 for x in range(self.length):
                     for z in range(self.length):
-                        self.blockIndex[x][z] = int(float(x) / self.length * len(self.freqBank))
+                        self.blockIndex[x][z] = int(float(x) / self.length * len(self.notes))
             elif self.layout == "ver":
                  for x in range(self.length):
                     for z in range(self.length):
-                        self.blockIndex[x][z] = int(float(z) / self.length * len(self.freqBank))
+                        self.blockIndex[x][z] = int(float(z) / self.length * len(self.notes))
             elif self.layout == "rad":
                  for x in range(self.length):
                     for z in range(self.length):
-                        self.blockIndex[x][z] = int(len(self.freqBank) * (abs(self.length * 0.5 - x) / self.length + abs(self.length * 0.5 - z) / self.length))  
+                        # -0.001 parce que la premiere valeur est toujours au dessus du max. Voir avec Olivier?
+                        #                                                                       v
+                        self.blockIndex[x][z] = int((len(self.notes) - 0.001) * (abs(self.length * 0.5 - x) / self.length + abs(self.length * 0.5 - z) / self.length))  
                         
         self.ApplyLayout() 
     
@@ -60,10 +63,12 @@ class SynthData:
     def ApplyLayout(self):
         for x in range(self.length):
             for z in range(self.length):
-                self.blockFreqs[x][z] = self.freqBank[self.blockIndex[x][z]]         
-                
-        for i in range(synths):
-            synths[i].UpdateFreqs(self.blockFreqs)
+                #assign notes to blocks
+                self.blockNotes[x][z] = self.notes[self.blockIndex[x][z]]         
+         
+        #give the notes to the synths
+        for i in range(len(self.synths)):
+            self.synths[i].UpdateNotes(self.blockNotes)
 
     def SetLayout(self, layout):
         self.layout = layout
@@ -78,13 +83,13 @@ class SynthData:
 
             if self.clearNotes:
                 self.notes = []
-                self.freqBank = []
+                #self.freqBank = []
                 self.clearNotes = False
                                 
             self.notes.append(data1)
             self.notes.sort()               
-            self.freqBank.append(midiToHz(data1))
-            self.freqBank.sort()
+            #self.freqBank.append(midiToHz(data1))
+            #self.freqBank.sort()
             
             self.UpdateLayout()
             
