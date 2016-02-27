@@ -3,14 +3,15 @@ from Synth_01 import *
 
 
 class SynthManager:
-    def __init__(self, length):
+    def __init__(self, length, realLength):
         self.length = length
+        self.realLength = realLength
         self.size = self.length*self.length
         self.blockHeights = [[0 for x in range(self.length)] for z in range(self.length)]
         
 
-        self.fmSynth = FMSynth(length=self.length, octave=-1)
-        self.wtSynth = WTSynth(length=self.length, octave=0)
+        self.fmSynth = FMSynth(length=self.length, octave=0)
+        self.wtSynth = WTSynth(length=self.length, octave=-1)
         
         self.outputs1 = self.fmSynth.GetOutput() + self.wtSynth.GetOutput()
         self.comp = Compress(input = self.outputs1, thresh=-40, ratio=4, risetime=0.1, falltime=0.50, lookahead=0.00, knee=1, outputAmp=False, mul=0.7, add=0)
@@ -85,7 +86,6 @@ class SynthManager:
         #Replace these when new notes are played
         if status == 144: #note on
             self.noteOns.append(data1)
-            #print data1
 
             if self.clearNotes:
                 self.notes = []
