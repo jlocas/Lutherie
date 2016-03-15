@@ -9,23 +9,30 @@ class SynthManager:
         self.size = self.length*self.length
         self.blockHeights = [[0 for x in range(self.length)] for z in range(self.length)]
         
-
-        self.fmSynth = FMSynth(length=self.length, octave=0)
-        self.wtSynth = WTSynth(length=self.length, octave=-1)
+### bus 1 ### 
+        self.fmSynth = FMSynth(length=self.length, octave=0, mul=0.5)
+        self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.33)
         
         self.outputs1 = self.fmSynth.GetOutput() + self.wtSynth.GetOutput()
         self.comp = Compress(input = self.outputs1, thresh=-40, ratio=4, risetime=0.1, falltime=0.50, lookahead=0.00, knee=1, outputAmp=False, mul=0.7, add=0)
         self.rvb = Freeverb(input=self.comp, size=0.50, damp=0.50, bal=0.8, mul=1, add=0).out()
 
-        self.pulsynth = Pulsynth(length=self.length, octave=2)
+### bus 2 ###
+        self.pulsynth = Pulsynth2(octave=1, voices=10, spread=5, mul=0.1)
         self.outputs2 = self.pulsynth.GetOutput().out()
-
         
 
-        #which index from the freqBank for the block
+########FOR BLOCK GROUPS########
+        #which index from the freqBank for the block group
         self.blockIndex = [[0 for x in range(self.length)] for z in range(self.length)]
-        #the frequency itself, the value that is sent to the synth's SigTo. For each individual block
+        #the frequency itself, the value that is sent to the synth's SigTo. For each individual block group
         self.blockNotes = [[0 for x in range(self.length)] for z in range(self.length)]
+        
+########FOR SINGLE BLOCKS########
+        self.realBlockIndex = [[0 for x in range(self.realLength)] for z in range(self.realLength)]
+        #the frequency itself, the value that is sent to the synth's SigTo. For each individual block
+        self.realBlockNotes = [[0 for x in range(self.realLength)] for z in range(self.realLength)]
+
         
         self.midi = RawMidi(self.UpdateNotes)
         self.notes = [0, 4, 7]
@@ -56,29 +63,31 @@ class SynthManager:
     def UpdateLayout(self):
         
         if self.notes:
-            if self.layout == "hor":
-                for x in range(self.length):
-                    for z in range(self.length):
-                        self.blockIndex[x][z] = int(float(x) / self.length * len(self.notes))
-            elif self.layout == "ver":
-                 for x in range(self.length):
-                    for z in range(self.length):
-                        self.blockIndex[x][z] = int(float(z) / self.length * len(self.notes))
-            elif self.layout == "rad":
-                 for x in range(self.length):
-                    for z in range(self.length):
-                        # -0.001 parce que la premiere valeur est toujours au dessus du max.
-                        #                                                                       v
-                        self.blockIndex[x][z] = int((len(self.notes) - 0.00001) * (abs(self.length * 0.5 - x) / self.length + abs(self.length * 0.5 - z) / self.length))  
-                        
+            #block groups
             for x in range(self.length):
                 for z in range(self.length):
-                    #assign notes to blocks
+                    # -0.001 parce que la premiere valeur est toujours au dessus du max.
+                    #                                                                       v
+                    self.blockIndex[x][z] = int((len(self.notes) - 0.00001) * (abs(self.length * 0.5 - x) / self.length + abs(self.length * 0.5 - z) / self.length))  
+            #single blocks      
+            for x in range(self.realLength):
+                for z in range(self.realLength):
+                    self.realBlockIndex[x][z] = int((len(self.notes) - 0.00001) * (abs(self.realLength * 0.5 - x) / self.realLength + abs(self.realLength * 0.5 - z) / self.realLength))  
+
+#assign notes to blocks
+            #block groups
+            for x in range(self.length):
+                for z in range(self.length):
                     self.blockNotes[x][z] = self.notes[self.blockIndex[x][z]]         
+            #single blocks  
+            for x in range(self.realLength):
+                for z in range(self.realLength):   
+                    self.realBlockNotes[x][z] = self.notes[self.realBlockIndex[x][z]]      
+
              
             #give the notes to the synths that use blocks for notes
             self.fmSynth.UpdateNotes(self.blockNotes)
-            self.pulsynth.UpdateNotes(self.blockNotes)
+            #self.pulsynth.UpdateNotes(self.realBlockNotes)
 
 
     def UpdateNotes(self, status, data1, data2):
@@ -96,6 +105,7 @@ class SynthManager:
             
             #give the notes to the Wave Terrain synth and update the layout to send the notes to the other synths
             self.wtSynth.UpdateNotes(self.notes)
+            self.pulsynth.UpdateNotes(self.notes)
             self.UpdateLayout()
             
 

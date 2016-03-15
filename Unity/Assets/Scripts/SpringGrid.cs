@@ -47,6 +47,9 @@ public class SpringGrid : MonoBehaviour {
 	private bool oldRepositionNow;
 	private RigidbodyConstraints oldConstraints;
 
+	private float averageDeviation;
+	private float averageHeight;
+
 
 	// Use this for initialization
 	void Awake () {
@@ -247,7 +250,6 @@ public class SpringGrid : MonoBehaviour {
 				}
 			}
 		}
-
 	}
 
 	private void Reposition() //reposition blocks[x,z]

@@ -6,7 +6,7 @@ from SynthManager import *
 import sys
 
 s = Server(sr=44100, nchnls=2, buffersize=2048, duplex=1)
-s.setMidiInputDevice(1)
+s.setMidiInputDevice(4)
 s.boot().start()
 
 
@@ -14,15 +14,15 @@ if len(sys.argv) > 1:
     gridLength = int(sys.argv[1])
     realGridLength = int(sys.argv[2])
 else: 
-    gridLength = 8
+    gridLength = 4
     realGridLength = 32
 
 blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLength)]
 
-con = Controller(config=1)
-con.debug = False
+con = Controller(config=0)
+con.debug = True
 
-synman = SynthManager(length=gridLength, realLength = realGridLength)
+synman = SynthManager(length=gridLength, realLength=realGridLength)
 
 #receive OSC for cube sections and how to handle synths
 def OSC(address, *args):
@@ -39,7 +39,7 @@ def OSC(address, *args):
             synman.UpdateBlocks(blocks)
             
     if address =='/springGrid/rain2/ballHit':
-        synman.pulsynth.Pulse(args[0], args[1])
+        synman.pulsynth.Pulse()
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC) 
 

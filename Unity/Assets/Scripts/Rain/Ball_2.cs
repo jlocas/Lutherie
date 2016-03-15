@@ -36,6 +36,10 @@ public class Ball_2 : MonoBehaviour {
 		}
 	}
 
+	void OnCollisionEnter(Collision col){
+		Destroy (gameObject);
+	}
+
 	public void SetParticleContainer(GameObject ctr)
 	{
 		particleContainer = ctr;

@@ -12,7 +12,7 @@ public class Rain : MonoBehaviour {
 	GameObject boundsGo;
 	RainBounds bounds;
 	[Space(20)]
-	private int oldClockVal;
+	private int oldClockVal = 0;
 	private bool ballGate = true;
 
 	
@@ -75,6 +75,39 @@ public class Rain : MonoBehaviour {
 		}
 	}
 
+	public int spawnRate;
+	public float SpawnRate{
+		set{
+			int val = (int)value;
+			switch(val){
+			case 1:
+				spawnRate = 1;
+				break;
+			case 2:
+				spawnRate = 2;
+				break;
+			case 3:
+				spawnRate = 4;
+				break;
+			case 4:
+				spawnRate = 8;
+				break;
+			case 5:
+				spawnRate = 16;
+				break;
+			case 6:
+				spawnRate = 32;
+				break;
+			case 7:
+				spawnRate = 64;
+				break;
+			case 8:
+				spawnRate = 128;
+				break;
+			}
+		}
+	}
+
 	public void Spawn1Ball(float force){
 
 		if(ballGate){
@@ -100,9 +133,9 @@ public class Rain : MonoBehaviour {
 	}
 
 	void Tick(){
-		if(clock.doubles != oldClockVal){
+		if(clock.ticks - oldClockVal >= spawnRate){
 			SpawnBall();
-			oldClockVal = clock.doubles;
+			oldClockVal = clock.ticks;
 		}
 	}
 
@@ -121,4 +154,5 @@ public class Rain : MonoBehaviour {
 	void Update(){
 		Tick ();
 	}
+	
 }

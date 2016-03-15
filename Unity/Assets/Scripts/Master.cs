@@ -17,8 +17,8 @@ public class Master : MonoBehaviour {
 		procsi = new ProcessStartInfo();
 		string dir = "";
 
-		//procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
-		procsi.WorkingDirectory = @"C:\Users\OPTIMUS\Documents\School\Lutherie\Pyo";
+		procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
+		//procsi.WorkingDirectory = @"C:\Users\OPTIMUS\Documents\School\Lutherie\Pyo";
 		procsi.FileName = "_Main.py";
 		procsi.Arguments = string.Format ("{0} {1}", grid.lengthDiv, grid.sideLength);
 

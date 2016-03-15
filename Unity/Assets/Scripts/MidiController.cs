@@ -8,7 +8,7 @@ public enum MappedParameter
 	Rain1_XSize,
 	Rain1_ZSize,
 	Rain1_BallForce,
-	Rain1_Frequency,
+	Rain1_SpawnRate,
 	Rain1_SpawnBalls,
 	Rain1_Spawn1Ball,
 	Rain2_XPos,
@@ -16,7 +16,7 @@ public enum MappedParameter
 	Rain2_XSize,
 	Rain2_ZSize,
 	Rain2_BallForce,
-	Rain2_Frequency,
+	Rain2_SpawnRate,
 	Rain2_SpawnBalls,
 	Springs_XSpring,
 	Springs_YSpring,
@@ -92,7 +92,8 @@ public class MidiController {
 	public void Send()	{
 		switch(parameter)
 		{
-		case MappedParameter.Rain1_Frequency:
+		case MappedParameter.Rain1_SpawnRate:
+			rain1.SpawnRate = Value;
 			break;
 		case MappedParameter.Rain1_SpawnBalls:
 			rain1.SpawnBalls = Value;
@@ -116,6 +117,9 @@ public class MidiController {
 			rain1.SizeZ = Value;
 			break;
 
+		case MappedParameter.Rain2_SpawnRate:
+			rain2.SpawnRate = Value;
+			break;
 		case MappedParameter.Rain2_SpawnBalls:
 			rain2.SpawnBalls = Value;
 			break;
