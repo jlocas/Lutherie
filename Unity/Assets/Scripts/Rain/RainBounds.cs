@@ -6,6 +6,7 @@ public class RainBounds : MonoBehaviour {
 	public float gridSize;
 	public GameObject rangePrefab;
 	public ParticleSystem particles;
+	public float initSize;
 	private GameObject rangeGO;
 
 
@@ -250,5 +251,11 @@ public class RainBounds : MonoBehaviour {
 		if(!setPos && !setScale && opacity == 0f){
 				this.enabled = false; //disable Update() if setPos and setScale are false
 		}
+	}
+
+	void Start(){
+		SizeX = initSize;
+		SizeZ = initSize;
+		mat.SetFloat("_DissolveAmount", 0f);
 	}
 }

@@ -1,5 +1,6 @@
 from pyo import *
 from Synth_01 import *
+from Pulsynth import *
 
 
 class SynthManager:
@@ -7,18 +8,18 @@ class SynthManager:
         self.length = length
         self.realLength = realLength
         self.size = self.length*self.length
-        self.blockHeights = [[0 for x in range(self.length)] for z in range(self.length)]
+        self.blockHeights = [[0.0 for x in range(self.length)] for z in range(self.length)]
         
 ### bus 1 ### 
         self.fmSynth = FMSynth(length=self.length, octave=0, mul=0.5)
-        self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.33)
+        self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.05)
         
         self.outputs1 = self.fmSynth.GetOutput() + self.wtSynth.GetOutput()
-        self.comp = Compress(input = self.outputs1, thresh=-40, ratio=4, risetime=0.1, falltime=0.50, lookahead=0.00, knee=1, outputAmp=False, mul=0.7, add=0)
-        self.rvb = Freeverb(input=self.comp, size=0.50, damp=0.50, bal=0.8, mul=1, add=0).out()
+        self.comp1a = Compress(input=self.outputs1, thresh=-40, ratio=4, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=5, add=0)
+        self.rvb = Freeverb(input=self.outputs1, size=0.50, damp=0.50, bal=0.8, mul=1, add=0).out()
 
 ### bus 2 ###
-        self.pulsynth = Pulsynth2(octave=1, voices=10, spread=5, mul=0.1)
+        self.pulsynth = Pulsynth2(octave=2, voices=10, spread=5, mul=0.1)
         self.outputs2 = self.pulsynth.GetOutput().out()
         
 
@@ -117,11 +118,11 @@ class SynthManager:
             
         ####################################################
         
-    def UpdateBlocks(self, blocks):
+    def UpdateBlocks(self, heights):
 
         for x in range(self.length):
             for z in range(self.length):
-                self.blockHeights[x][z] = blocks[x][z].position.y
+                self.blockHeights[x][z] = heights[x][z]
                 
         self.avgheight = self.AverageAbs(self.blockHeights)
         

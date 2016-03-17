@@ -18,6 +18,7 @@ else:
     realGridLength = 32
 
 blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLength)]
+heights = [[0.0 for x in range(gridLength)] for z in range(gridLength)]
 
 con = Controller(config=0)
 con.debug = True
@@ -32,12 +33,24 @@ def OSC(address, *args):
         
         for x in range(gridLength):
             for z in range(gridLength):
-                blocks[x][z].setPosition(args[i * 3], args[i * 3 + 1], args[i * 3 + 2])
+                heights[x][z] = args[i]
                 i+=1
 
         if synman != None:
-            synman.UpdateBlocks(blocks)
+            synman.UpdateBlocks(heights)
             
+    if address == '/springGrid/blockGroups/vels':
+        pass
+        
+    if address == '/springGrid/blockGroups/avgdev':
+        pass
+        
+    if address == '/springGrid/blockGroups/avgy':
+        pass
+        
+    if address == '/springGrid/blockGroups/avgvel':
+        pass
+
     if address =='/springGrid/rain2/ballHit':
         synman.pulsynth.Pulse()
         

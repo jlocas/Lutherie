@@ -67,8 +67,8 @@ class WTSynth:
         self.x = Sine(freq=self.xfreq, mul=0.25, add=0.5)
         self.z = Sine(freq=self.zfreq, mul=0.25, add=0.5)
         
-        self.ptr1 = MatrixPointer(matrix=self.m1, x=self.x, y=self.z, mul=0.25, add=0)
-        self.ptr2 = MatrixPointer(matrix=self.m2, x=self.x, y=self.z, mul=0.25, add=0)
+        self.ptr1 = MatrixPointer(matrix=self.m1, x=self.x, y=self.z, mul=1, add=0)
+        self.ptr2 = MatrixPointer(matrix=self.m2, x=self.x, y=self.z, mul=1, add=0)
         self.ptr = Interp(self.ptr1, self.ptr2, self.inter)
 
         self.lpf = Biquadx(input=self.ptr, freq=4000, q=1, type=0, stages=4, mul=1, add=0)
@@ -109,76 +109,6 @@ class WTSynth:
         
     def GetOutput(self):
         return self.output
-
-        
-#############################################################
-class Pulsynth:
-    def __init__(self, length, octave):
-        self.length = length
-        self.size = self.length*self.length
-        self.octave = octave
-        
-        self.blockIndex = [[0 for x in range(self.length)] for z in range(self.length)]
-        self.blockFreqs = [[100 for x in range(self.length)] for z in range(self.length)]
-
-        self.freq = SigTo(value=1000, time=0.01, init=1000.00, mul=1, add=0)
-        self.env = Adsr(attack=0.01, decay=0.5, sustain=0, release=0.10, dur=0, mul=1, add=0)
-        self.src = SineLoop(freq=self.freq, feedback=0, mul=self.env, add=0)
-        self.output = self.src
-        
-
-    def Pulse(self, x, z):
-        self.freq.setValue(self.blockFreqs[x/self.length][z/self.length])
-        self.env.play()
-
-
-    def UpdateNotes(self, notes):
-        for x in range(self.length):
-            for z in range(self.length):
-                self.blockFreqs[x][z] = midiToHz(notes[x][z] + 12 * self.octave)
-                
-    def GetOutput(self):
-        return self.output
-
-
-class Pulsynth2:
-    def __init__(self, octave, voices, spread, mul):
-        self.octave = octave
-        
-        #how many octaves 
-        self.spread = spread
-        self.freqs = [100]
-        self.mul=mul
-        
-        self.voices = voices
-        self.which = 0  #which voice will be used
-
-        self.env = [Adsr(attack=0.01, decay=0.5, sustain=0, release=0.10, dur=0, mul=self.mul, add=0) for i in range(self.voices)]
-        self.src1 = [SineLoop(freq=100, feedback=0, mul=self.env[i], add=0) for i in range(self.voices)]
-        self.src2 = [FM(carrier=100, ratio=0.50, index=5, mul=self.env[i], add=0) for i in range(self.voices)]
-        
-        self.output = Sig(0)
-        for i in range(self.voices):
-            self.output = self.output + self.src1[i]
-
-    def UpdateNotes(self, notes):
-        self.freqs = []
-        
-        for i in range(len(notes)):
-            for j in range(self.spread):
-                self.freqs.append(midiToHz(notes[i] + 12 * j))
-                
-    def Pulse(self):
-        self.src1[self.which].freq = random.choice(self.freqs)
-        self.src2[self.which].carrier = random.choice(self.freqs)
-
-        self.env[self.which].play()
-        self.which = (self.which + 1) % self.voices
-
-    def GetOutput(self):
-        return self.output
-
-
 
 
 

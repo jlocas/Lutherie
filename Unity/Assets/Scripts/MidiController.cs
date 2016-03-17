@@ -24,7 +24,6 @@ public enum MappedParameter
 	Springs_XDamp,
 	Springs_YDamp,
 	Springs_ZDamp,
-	Springs_Reposition,
 	Springs_FreezeEdges,
 	Springs_RepositionNOW
 }
@@ -138,33 +137,29 @@ public class MidiController {
 		case MappedParameter.Rain2_ZSize:
 			rain2.SizeZ = Value;
 			break;
-
 		case MappedParameter.Springs_FreezeEdges:
-			grid.freezeEdges = Mathf.RoundToInt(Value) == 0 ? false : true;
-			break;
-		case MappedParameter.Springs_Reposition:
-			grid.repositionBlocks = Mathf.RoundToInt(Value) == 0 ? false : true;
+			grid.FreezeEdges = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;
 		case MappedParameter.Springs_RepositionNOW:
-			grid.repositionNow = Mathf.RoundToInt(Value) == 0 ? false : true;
+			grid.RepositionNow = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;
 		case MappedParameter.Springs_XDamp:
-			grid.damper.x = Value;
+			grid.DampX = Value;
 			break;
 		case MappedParameter.Springs_XSpring:
-			grid.spring.x = Value;
+			grid.SpringX = Value;
 			break;
 		case MappedParameter.Springs_YDamp:
-			grid.damper.y = Value;
+			grid.DampY = Value;
 			break;
 		case MappedParameter.Springs_YSpring:
-			grid.spring.y = Value;
+			grid.SpringY = Value;
 			break;
 		case MappedParameter.Springs_ZDamp:
-			grid.damper.z = Value;
+			grid.DampZ = Value;
 			break;
 		case MappedParameter.Springs_ZSpring:
-			grid.spring.z = Value;
+			grid.SpringZ = Value;
 			break;
 		}
 	}

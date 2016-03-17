@@ -96,6 +96,7 @@ public class SpringGridBlock {
 	}
 
 
+
 }
 
 [System.Serializable]
@@ -134,6 +135,15 @@ public class SpringGridBlockGroup
 		}
 
 		return new Vector3(sum.x * multiplier, sum.y * multiplier, sum.z * multiplier);
+	}
+
+	public float GetAverageSpeed(){
+		float avg = 0f;
+		foreach(SpringGridBlock blocky in blocks)
+		{
+			avg += blocky.Body.velocity.magnitude;
+		}
+		return avg / blocks.Length;
 	}
 
 	public float GetDeviation()
