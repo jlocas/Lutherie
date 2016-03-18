@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\Rain\Rain_2.cs" />
      <Compile Include="Assets\Scripts\Randoms.cs" />
      <Compile Include="Assets\Scripts\SpringGrid.cs" />
+     <Compile Include="Assets\Scripts\SpringGridBackup.cs" />
      <Compile Include="Assets\Scripts\SpringGridBlock.cs" />
      <Compile Include="Assets\ShaderForge\Example Assets\Scripts\EditorLabel.cs" />
      <Compile Include="Assets\ShaderForge\Example Assets\Scripts\EnableCameraDepthInForward.cs" />
@@ -163,6 +164,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Adaptation.shader" />
      <None Include="Assets\detailed.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
+     <None Include="Assets\Shaders\BigBalls.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VignettingShader.shader" />
      <None Include="Assets\Fresnel\Shaders\Fresnel - Transparent Rim.shader" />

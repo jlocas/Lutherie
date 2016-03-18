@@ -16,30 +16,31 @@ class FMSynth:
         
         self.src = FM(carrier=self.freqs, ratio=2, index=self.index, mul=self.amps, add=0)
         self.pan = SPan(input=self.src, outs=2, pan=[0.25, 0.75], mul=1, add=0)
-        self.clip = Clip(input=self.pan, min=-0.9, max=0.9, mul=self.mul, add=0)
-        self.output = self.clip
+        self.output = self.pan
         
         
-    def UpdateHeights(self, heights, avg):
+    def UpdateHeights(self, heights):
         self.heights = heights
-        i = 0
+        self.i = 0
         
         for x in range(self.length):
             for z in range(self.length):
-                self.amps[i].setValue(self.heights[x][z] * 0.05)
-                i += 1
-                
-        self.index.setValue(avg)
-        
+                self.amps[self.i].setValue(self.heights[x][z] * 0.01)
+                self.i += 1
+                        
     def UpdateNotes(self, notes):
         
-        i = 0
+        self.i = 0
         for x in range(self.length):
             for z in range(self.length):
-                self.freqs[i].setValue(midiToHz(notes[x][z] + 12 * self.octave))
-                i += 1
+                self.freqs[self.i].setValue(midiToHz(notes[x][z] + 12 * self.octave))
+                self.i += 1
                 
         self.src.setCarrier(self.freqs)
+        
+    def UpdateAverageHeight(self, avgy):
+        self.index.setValue(avgy)
+
         
     def GetOutput(self):
         return self.output
@@ -67,16 +68,14 @@ class WTSynth:
         self.x = Sine(freq=self.xfreq, mul=0.25, add=0.5)
         self.z = Sine(freq=self.zfreq, mul=0.25, add=0.5)
         
-        self.ptr1 = MatrixPointer(matrix=self.m1, x=self.x, y=self.z, mul=1, add=0)
-        self.ptr2 = MatrixPointer(matrix=self.m2, x=self.x, y=self.z, mul=1, add=0)
+        self.ptr1 = MatrixPointer(matrix=self.m1, x=self.x, y=self.z, mul=self.mul, add=0)
+        self.ptr2 = MatrixPointer(matrix=self.m2, x=self.x, y=self.z, mul=self.mul, add=0)
         self.ptr = Interp(self.ptr1, self.ptr2, self.inter)
 
         self.lpf = Biquadx(input=self.ptr, freq=4000, q=1, type=0, stages=4, mul=1, add=0)
         self.hpf = Biquadx(input=self.ptr, freq=50, q=2, type=1, stages=2, mul=1, add=0)
         
-        self.clip = Clip(input=self.hpf, min=-0.9, max=0.9, mul=self.mul, add=0)
-
-        self.output = self.clip
+        self.output = self.hpf
         
         
     def UpdateHeights(self, heights):
@@ -112,5 +111,44 @@ class WTSynth:
 
 
 
+class VelSynth:
+    def __init__(self, length, octave, mul):
+        self.length = length
+        self.size = self.length*self.length
+        self.octave = octave
+        self.mul = mul
+        
+        #1d lists because 2d lists crash the thing
+        self.freqs = [SigTo(value=200, time=0.05, init=100) for i in range(self.size)]
+        self.amps = [SigTo(value=0, time=0.02, init=0) for i in range(self.size)]
+        self.formants = [710, 1100, 2640]
+        
+        self.src = LFO(freq=self.freqs, sharp=0.75, type=0, mul=self.amps, add=0)
+        self.delay = Delay(input=self.src, delay=0.005, feedback=0.15, maxdelay=1, mul=1, add=0)
+
+        self.form = Biquad(input=self.delay, freq=self.formants, q=34, type=2, mul=[2, 1, 0.5], add=0)
+        self.mouth = Biquadx(input=self.form, freq=300, q=1, type=0, stages=2, mul=5, add=0)
+
+        self.chor = Chorus(input=self.mouth, depth=0.2, feedback=0.25, bal=0.50, mul=1, add=0)
+        self.output = Mix(input=self.chor, voices=2, mul=self.mul, add=0)
+        
+   
+        
+    def UpdateSpeeds(self, speeds):
+        self.speeds = speeds
+        
+        for i in range(self.size):
+            self.amps[i].setValue(speeds[i] * 0.05)
+                        
+    def UpdateNotes(self, notes):
+        
+        self.i = 0
+        for x in range(self.length):
+            for z in range(self.length):
+                self.freqs[self.i].setValue(midiToHz(notes[x][z] + 12 * self.octave))
+                self.i += 1
+                        
+    def GetOutput(self):
+        return self.output
 
 

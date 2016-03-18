@@ -37,22 +37,25 @@ def OSC(address, *args):
                 i+=1
 
         if synman != None:
-            synman.UpdateBlocks(heights)
+            synman.UpdateBlockHeights(heights)
             
     if address == '/springGrid/blockGroups/vels':
-        pass
+        synman.UpdateBlockSpeeds(args)
         
     if address == '/springGrid/blockGroups/avgdev':
         pass
         
     if address == '/springGrid/blockGroups/avgy':
-        pass
+        synman.UpdateAverageHeight(args[0])
         
     if address == '/springGrid/blockGroups/avgvel':
         pass
 
     if address =='/springGrid/rain2/ballHit':
-        synman.pulsynth.Pulse()
+        synman.pulsynth2.Pulse()
+        
+        if random.uniform > 0.5:
+            synman.pulsynth.Pulse()
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC) 
 

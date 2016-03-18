@@ -8,19 +8,28 @@ class SynthManager:
         self.length = length
         self.realLength = realLength
         self.size = self.length*self.length
+        
         self.blockHeights = [[0.0 for x in range(self.length)] for z in range(self.length)]
+        self.blockSpeeds = [[0.0 for x in range(self.length)] for z in range(self.length)]
+        self.avgSpeed = 0.0
+        self.avgHeight = 0.0
+        self.avgDev = 0.0
         
 ### bus 1 ### 
-        self.fmSynth = FMSynth(length=self.length, octave=0, mul=0.5)
+        self.fmSynth = FMSynth(length=self.length, octave=0, mul=0.05)
         self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.05)
+        self.velSynth = VelSynth(length=self.length, octave=3, mul=0.25)
         
-        self.outputs1 = self.fmSynth.GetOutput() + self.wtSynth.GetOutput()
+        
+        self.outputs1 = self.fmSynth.GetOutput() + self.wtSynth.GetOutput() + self.velSynth.GetOutput()
         self.comp1a = Compress(input=self.outputs1, thresh=-40, ratio=4, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=5, add=0)
         self.rvb = Freeverb(input=self.outputs1, size=0.50, damp=0.50, bal=0.8, mul=1, add=0).out()
 
 ### bus 2 ###
-        self.pulsynth = Pulsynth2(octave=2, voices=10, spread=5, mul=0.1)
-        self.outputs2 = self.pulsynth.GetOutput().out()
+        self.pulsynth2 = Pulsynth2(octave=3, voices=10, spread=3, mul=0.25)
+        self.pulsynth = Pulsynth(octave=3, voices=10, spread=3, mul=1)
+        self.outputs2 = self.pulsynth.GetOutput() + self.pulsynth2.GetOutput()
+        self.outputs2.out()
         
 
 ########FOR BLOCK GROUPS########
@@ -88,7 +97,7 @@ class SynthManager:
              
             #give the notes to the synths that use blocks for notes
             self.fmSynth.UpdateNotes(self.blockNotes)
-            #self.pulsynth.UpdateNotes(self.realBlockNotes)
+            self.velSynth.UpdateNotes(self.blockNotes)
 
 
     def UpdateNotes(self, status, data1, data2):
@@ -107,6 +116,8 @@ class SynthManager:
             #give the notes to the Wave Terrain synth and update the layout to send the notes to the other synths
             self.wtSynth.UpdateNotes(self.notes)
             self.pulsynth.UpdateNotes(self.notes)
+            self.pulsynth2.UpdateNotes(self.notes)
+
             self.UpdateLayout()
             
 
@@ -118,23 +129,24 @@ class SynthManager:
             
         ####################################################
         
-    def UpdateBlocks(self, heights):
+    def UpdateBlockHeights(self, heights):
 
         for x in range(self.length):
             for z in range(self.length):
                 self.blockHeights[x][z] = heights[x][z]
-                
-        self.avgheight = self.AverageAbs(self.blockHeights)
-        
-        self.fmSynth.UpdateHeights(self.blockHeights, self.avgheight)
+                        
+        self.fmSynth.UpdateHeights(self.blockHeights)
         self.wtSynth.UpdateHeights(self.blockHeights)
-        
-            
-    def AverageAbs(self, l):
-        self.sum = 0
 
+    def UpdateBlockSpeeds(self, speeds):
+        self.i = 0
         for x in range(self.length):
             for z in range(self.length):
-                self.sum += abs(l[x][z])
-            
-        return self.sum / self.size
+                self.blockSpeeds[x][z] = speeds[self.i]
+                self.i += 1
+                
+        self.velSynth.UpdateSpeeds(speeds)
+                
+    def UpdateAverageHeight(self, avgy):
+        self.fmSynth.UpdateAverageHeight(avgy)
+        
