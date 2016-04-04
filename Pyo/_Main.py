@@ -21,7 +21,7 @@ blocks = [[SpringGridBlock() for x in range(gridLength)] for z in range(gridLeng
 heights = [[0.0 for x in range(gridLength)] for z in range(gridLength)]
 
 con = Controller(config=0)
-con.debug = True
+con.debug = False
 
 synman = SynthManager(length=gridLength, realLength=realGridLength)
 
@@ -43,19 +43,18 @@ def OSC(address, *args):
         synman.UpdateBlockSpeeds(args)
         
     if address == '/springGrid/blockGroups/avgdev':
-        pass
+        synman.UpdateAverageDeviation(args[0])
         
     if address == '/springGrid/blockGroups/avgy':
         synman.UpdateAverageHeight(args[0])
         
     if address == '/springGrid/blockGroups/avgvel':
-        pass
+        synman.UpdateAverageVelocity(args[0])
 
     if address =='/springGrid/rain2/ballHit':
-        synman.pulsynth2.Pulse()
-        
-        if random.uniform > 0.5:
-            synman.pulsynth.Pulse()
+        synman.pulsynth.Pulse()
+        #synman.hat.Trigg()
+
         
 receiver = OscDataReceive(12543, "/springGrid/*", OSC) 
 

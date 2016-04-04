@@ -1,6 +1,7 @@
 from pyo import *
 from Synth_01 import *
 from Pulsynth import *
+from Hihat import *
 
 
 class SynthManager:
@@ -16,21 +17,26 @@ class SynthManager:
         self.avgDev = 0.0
         
 ### bus 1 ### 
-        self.fmSynth = FMSynth(length=self.length, octave=0, mul=0.05)
-        self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.05)
-        self.velSynth = VelSynth(length=self.length, octave=3, mul=0.25)
+        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.001)
+        self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.1)
+        self.velSynth = VelSynth(length=self.length, octave=1, mul=0.1)
         
         
-        self.outputs1 = self.fmSynth.GetOutput() + self.wtSynth.GetOutput() + self.velSynth.GetOutput()
-        self.comp1a = Compress(input=self.outputs1, thresh=-40, ratio=4, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=5, add=0)
-        self.rvb = Freeverb(input=self.outputs1, size=0.50, damp=0.50, bal=0.8, mul=1, add=0).out()
+        self.outputs1 = Mix(input=self.fmSynth.GetOutput() + self.wtSynth.GetOutput() + self.velSynth.GetOutput(), voices=2, mul=1, add=0)
+        #self.outputs1 = Mix(input=self.fmSynth.GetOutput() + self.velSynth.GetOutput(), voices=2, mul=1, add=0)
+        #self.outputs1 = Mix(input=self.fmSynth.GetOutput(), voices=2, mul=1, add=0)
+
+        self.comp1a = Compress(input=self.outputs1, thresh=-20, ratio=12, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=0.1, add=0)
+        #self.lim1a = Compress(input=self.comp1a, thresh=-5, ratio=100, risetime=0.01, falltime=0.02, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
+        self.rvb = Freeverb(input=self.comp1a, size=0.50, damp=0.80, bal=0.5, mul=1, add=0).out()
 
 ### bus 2 ###
-        self.pulsynth2 = Pulsynth2(octave=3, voices=10, spread=3, mul=0.25)
-        self.pulsynth = Pulsynth(octave=3, voices=10, spread=3, mul=1)
-        self.outputs2 = self.pulsynth.GetOutput() + self.pulsynth2.GetOutput()
+        self.pulsynth = Pulsynth(octave=3, voices=10, spread=3, mul=0.1)
+        self.outputs2 = self.pulsynth.GetOutput()
         self.outputs2.out()
         
+### bus 3 ###
+        #self.hat = Hihat()
 
 ########FOR BLOCK GROUPS########
         #which index from the freqBank for the block group
@@ -116,7 +122,6 @@ class SynthManager:
             #give the notes to the Wave Terrain synth and update the layout to send the notes to the other synths
             self.wtSynth.UpdateNotes(self.notes)
             self.pulsynth.UpdateNotes(self.notes)
-            self.pulsynth2.UpdateNotes(self.notes)
 
             self.UpdateLayout()
             
@@ -149,4 +154,13 @@ class SynthManager:
                 
     def UpdateAverageHeight(self, avgy):
         self.fmSynth.UpdateAverageHeight(avgy)
+        self.velSynth.UpdateAverageHeight(avgy)
+        
+    def UpdateAverageDeviation(self, avgdev):
+        self.fmSynth.UpdateAverageDeviation(avgdev)
+        self.wtSynth.UpdateAverageDeviation(avgdev)
+        self.velSynth.UpdateAverageDeviation(avgdev)
+        
+    def UpdateAverageVelocity(self, avgvel):
+        self.wtSynth.UpdateAverageVelocity(avgvel)
         
