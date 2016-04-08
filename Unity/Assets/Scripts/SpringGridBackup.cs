@@ -34,26 +34,12 @@ public class SpringGridBackup : MonoBehaviour {
 	private SpringGridBlockGroup[,] blockGroups; //all block groups
 	public SpringGridBlockGroup[,] BlockGroups{	get { return blockGroups; } }
 
-	private Vector3 oldAnchorPos;
-	private float oldAnchorHeight = -10f;
-	private bool oldFreezeEdges;
-	private bool oldBlocksCollision;
-	
-	[Space(20)] //spring settings
-	private Vector3 oldSpring;
-	private Vector3 oldDamper;
-	private bool oldSpringCollision;
-
-	private bool oldRepositionNow;
-	private RigidbodyConstraints oldConstraints;
-
 	private float averageDeviation;
 	private float averageHeight;
 
 
 	// Use this for initialization
 	void Awake () {
-		InitOlds();
 		CreateGrid();
 
 		InvokeRepeating("PingBlocks", 0f, 1f);
@@ -62,7 +48,6 @@ public class SpringGridBackup : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//UpdateParameters();
 		Reposition();
 	
 	}
@@ -279,7 +264,7 @@ public class SpringGridBackup : MonoBehaviour {
 		}
 	}
 
-	private void RepositionNow(bool tog)
+	private void SetRepositionNow(bool tog)
 	{
 		bool repos = repositionBlocks;
 
@@ -337,6 +322,81 @@ public class SpringGridBackup : MonoBehaviour {
 		}
 
 		return maxVel;
+	}
+
+	public float SpringX{
+		set{
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[0].spring = value;
+				}
+			}
+			spring.x = value;
+		}
+
+	}
+
+	public float SpringY{
+		set{
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[2].spring = value;
+				}
+			}
+		}
+	}
+
+	public float SpringZ{
+		set{
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[1].spring = value;
+				}
+			}
+		}
+	}
+
+	public float DampX{
+		set{
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[0].damper = value;
+				}
+			}
+		}
+		
+	}
+	
+	public float DampY{
+		set{
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[2].damper = value;
+				}
+			}
+		}
+	}
+	
+	public float DampZ{
+		set{
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[1].damper = value;
+				}
+			}
+		}
+	}
+
+	public bool RepositionNow{
+		set{
+			SetRepositionNow(value);
+		}
+	}
+
+	public bool FreezeEdges{
+		set{
+			SetFreezeEdges(value);
+		}
 	}
 
 	private void SetFreezeEdges(bool tog)
@@ -431,69 +491,5 @@ public class SpringGridBackup : MonoBehaviour {
 			}
 		}
 		SetFreezeEdges(freezeEdges);
-	}
-
-	private void InitOlds()
-	{
-		oldAnchorHeight = anchorHeight;
-		oldFreezeEdges = freezeEdges;
-		oldBlocksCollision = blocksCollision;
-		
-		oldSpring = spring;
-		oldDamper = damper;
-		oldSpringCollision = springCollision;
-
-		oldConstraints = constraints;
-	}
-
-	private void UpdateParameters()
-	{
-		if(anchorHeight != oldAnchorHeight)
-		{
-			SetAnchorHeight(anchorHeight);
-			oldAnchorHeight = anchorHeight;
-		}
-
-		if(freezeEdges != oldFreezeEdges)
-		{
-			SetFreezeEdges(freezeEdges);
-			oldFreezeEdges = freezeEdges;
-		}
-
-		if(blocksCollision != oldBlocksCollision)
-		{
-			SetBlockCollision(blocksCollision);
-			oldBlocksCollision = blocksCollision;
-		}
-
-		if(spring.magnitude != oldSpring.magnitude)
-		{
-			SetSpring(spring);
-			oldSpring = spring;
-		}
-
-		if(damper.magnitude != oldDamper.magnitude)
-		{
-			SetDamper(damper);
-			oldDamper = damper;
-		}
-
-		if(springCollision != oldSpringCollision)
-		{
-			SetSpringCollision(springCollision);
-			oldSpringCollision = springCollision;
-		}
-
-		if(repositionNow != oldRepositionNow)
-		{
-			RepositionNow(repositionNow);
-			oldRepositionNow = repositionNow;
-		}
-
-		if(constraints != oldConstraints)
-		{
-			SetConstraints(constraints);
-			oldConstraints = constraints;
-		}
 	}
 }

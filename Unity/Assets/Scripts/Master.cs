@@ -15,7 +15,6 @@ public class Master : MonoBehaviour {
 	void Start () {
 		proc = new Process();
 		procsi = new ProcessStartInfo();
-		string dir = "";
 
 		procsi.WorkingDirectory = @"W:\Projects\Lutherie\Pyo";
 		//procsi.WorkingDirectory = @"C:\Users\OPTIMUS\Documents\School\Lutherie\Pyo";

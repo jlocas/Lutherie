@@ -7,7 +7,7 @@ public class RainBounds : MonoBehaviour {
 	public GameObject rangePrefab;
 	public ParticleSystem particles;
 	public float initSize;
-	private GameObject rangeGO;
+	//private GameObject rangeGO;
 
 
 	private bool setScale = false;
@@ -119,13 +119,13 @@ public class RainBounds : MonoBehaviour {
 		}
 	}
 
-	private void SetRangeScale(Vector3 s){
+	/*private void SetRangeScale(Vector3 s){
 		rangeGO.transform.localScale = new Vector3(s.x, 1f, s.z);
 	}
 
 	private void SetRangePos(float p){
 		rangeGO.transform.position = new Vector3(p, 0.5f, p);
-	}
+	}*/
 
 	public Vector3 GetBallPosition(){
 		Vector3 pos = new Vector3(0f,50f,0f);

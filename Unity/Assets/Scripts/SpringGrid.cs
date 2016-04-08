@@ -266,13 +266,12 @@ public class SpringGrid : MonoBehaviour {
 
 	private void SetRepositionNow(bool tog)
 	{
-		bool repos = repositionBlocks;
 
-		if(tog){
+		/*if(tog){
 			repositionBlocks = true;
 		} else {
 			repositionBlocks = repos;
-		}
+		}*/
 
 		for(int x = 0; x < sideLength; x++)	{
 			for(int z = 0; z <sideLength; z++){
@@ -387,15 +386,21 @@ public class SpringGrid : MonoBehaviour {
 		}
 	}
 
-	public bool RepositionNow{
+	public bool RepositionBlocks{
 		set{
-			SetRepositionNow(value);
+			repositionBlocks = value;
 		}
 	}
 
 	public bool FreezeEdges{
 		set{
 			SetFreezeEdges(value);
+		}
+	}
+
+	public RigidbodyConstraints Constraints{
+		set{
+			SetConstraints(value);
 		}
 	}
 
@@ -483,11 +488,7 @@ public class SpringGrid : MonoBehaviour {
 	{
 		for(int x = 0; x < sideLength; x++){
 			for(int z = 0; z < sideLength; z++){
-				if(repositionNow){
-					blocks[x,z].Body.constraints = RigidbodyConstraints.FreezeAll;
-				} else {
-					blocks[x,z].Body.constraints = constraints;
-				}
+				blocks[x,z].Body.constraints = constraints;
 			}
 		}
 		SetFreezeEdges(freezeEdges);

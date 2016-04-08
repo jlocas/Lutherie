@@ -17,18 +17,21 @@ class SynthManager:
         self.avgDev = 0.0
         
 ### bus 1 ### 
-        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.001)
-        self.wtSynth = WTSynth(length=self.length, octave=-1, mul=0.1)
-        self.velSynth = VelSynth(length=self.length, octave=1, mul=0.1)
+        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.5)
+        self.wtSynth = WTSynth(length=self.length, octave=0, mul=0.5)
+        self.velSynth = VelSynth(length=self.length, octave=2, mul=0.1)
+        self.velSynth2 = VelSynth2(octave=8, voices=10, mul=0.002)
         
         
-        self.outputs1 = Mix(input=self.fmSynth.GetOutput() + self.wtSynth.GetOutput() + self.velSynth.GetOutput(), voices=2, mul=1, add=0)
-        #self.outputs1 = Mix(input=self.fmSynth.GetOutput() + self.velSynth.GetOutput(), voices=2, mul=1, add=0)
+        self.outputs1 = Mix(input=self.fmSynth.GetOutput() + self.wtSynth.GetOutput() + self.velSynth.GetOutput() + self.velSynth2.GetOutput(), voices=2, mul=1, add=0)
+        #self.outputs1 = Mix(input=self.wtSynth.GetOutput(), voices=2, mul=1, add=0)
         #self.outputs1 = Mix(input=self.fmSynth.GetOutput(), voices=2, mul=1, add=0)
+        #self.outputs1 = Mix(input=self.velSynth2.GetOutput(), voices=2, mul=1, add=0)
 
-        self.comp1a = Compress(input=self.outputs1, thresh=-20, ratio=12, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=0.1, add=0)
-        #self.lim1a = Compress(input=self.comp1a, thresh=-5, ratio=100, risetime=0.01, falltime=0.02, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
-        self.rvb = Freeverb(input=self.comp1a, size=0.50, damp=0.80, bal=0.5, mul=1, add=0).out()
+        self.comp1a = Compress(input=self.outputs1, thresh=-20, ratio=12, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=1, add=0)
+        self.lim1a = Compress(input=self.comp1a, thresh=-5, ratio=100, risetime=0.01, falltime=0.02, lookahead=5.00, knee=0, outputAmp=False, mul=1, add=0)
+        
+        self.rvb = Freeverb(input=self.lim1a, size=0.50, damp=0.80, bal=0.5, mul=1, add=0).out()
 
 ### bus 2 ###
         self.pulsynth = Pulsynth(octave=3, voices=10, spread=3, mul=0.1)
@@ -122,6 +125,7 @@ class SynthManager:
             #give the notes to the Wave Terrain synth and update the layout to send the notes to the other synths
             self.wtSynth.UpdateNotes(self.notes)
             self.pulsynth.UpdateNotes(self.notes)
+            self.velSynth2.UpdateNotes(self.notes)
 
             self.UpdateLayout()
             
@@ -163,4 +167,5 @@ class SynthManager:
         
     def UpdateAverageVelocity(self, avgvel):
         self.wtSynth.UpdateAverageVelocity(avgvel)
+        self.velSynth2.UpdateAverageVelocity(avgvel)
         

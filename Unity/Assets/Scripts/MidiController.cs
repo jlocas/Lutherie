@@ -3,6 +3,7 @@ using System.Collections;
 
 public enum MappedParameter
 {
+	NONE,
 	Rain1_XPos,
 	Rain1_ZPos,
 	Rain1_XSize,
@@ -25,7 +26,8 @@ public enum MappedParameter
 	Springs_YDamp,
 	Springs_ZDamp,
 	Springs_FreezeEdges,
-	Springs_RepositionNOW
+	Springs_FreezeBlocks,
+	Springs_Reposition
 }
 
 public enum Form
@@ -91,6 +93,8 @@ public class MidiController {
 	public void Send()	{
 		switch(parameter)
 		{
+		case MappedParameter.NONE:
+			break;
 		case MappedParameter.Rain1_SpawnRate:
 			rain1.SpawnRate = Value;
 			break;
@@ -140,8 +144,11 @@ public class MidiController {
 		case MappedParameter.Springs_FreezeEdges:
 			grid.FreezeEdges = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;
-		case MappedParameter.Springs_RepositionNOW:
-			grid.RepositionNow = Mathf.RoundToInt(Value) == 0 ? false : true;
+		case MappedParameter.Springs_FreezeBlocks:
+			grid.Constraints = Mathf.RoundToInt(Value) == 0 ? RigidbodyConstraints.FreezeRotation : RigidbodyConstraints.FreezeAll;
+			break;
+		case MappedParameter.Springs_Reposition:
+			grid.RepositionBlocks = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;
 		case MappedParameter.Springs_XDamp:
 			grid.DampX = Value;
