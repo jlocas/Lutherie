@@ -67,7 +67,7 @@ class WTSynth:
 
         self.m1 = NewMatrix(width=self.length, height=self.length, init=self.heights)
         self.m2 = NewMatrix(width=self.length, height=self.length, init=self.heights)
-        self.inter = SigTo(0, 0.04, 0)
+        self.inter = SigTo(0, 0.02, 0)
  
         
         self.xfreq = [Randi(min=50 - 50*0.01, max=50 + 50*0.01, freq=10) for i in range(self.voices)]
@@ -84,12 +84,6 @@ class WTSynth:
         self.lpfreq = SigTo(value=8000, time=0.01, init=8000.00, mul=1, add=0)
         self.lpf = Biquadx(input=self.ptr, freq=10000, q=1, type=0, stages=4, mul=1, add=0)
         self.hpf = Biquadx(input=self.ptr, freq=50, q=2, type=1, stages=2, mul=1, add=0)
-                
-
-        self.flgamp = SigTo(value=0, time=0.01, init=0.00, mul=1, add=0)
-        self.flgfreq = SigTo(value=0.2, time=0.01, init=0.2, mul=1, add=0)
-        self.flglf = Sine(freq=self.flgfreq, mul=.0045, add=.005)
-        self.flg = Delay(input=self.hpf, delay=self.flglf, feedback=0.25, maxdelay=1, mul=1, add=0)
         
         self.comp = Compress(input=self.hpf, thresh=-20, ratio=8, risetime=0.1, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
         self.lim = Compress(input=self.comp, thresh=-5, ratio=100, risetime=0.01, falltime=0.02, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
