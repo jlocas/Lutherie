@@ -123,11 +123,13 @@ class WTSynth:
         return self.output
         
     def UpdateAverageDeviation(self,avgdev):
+        pass
+        """
         self.val = avgdev*0.01 - 40
         if self.val < 0:
             self.flgamp.setValue(0)
         else:
-            self.flgamp.setValue(self.val)
+            self.flgamp.setValue(self.val)"""
 
     def UpdateAverageVelocity(self,avgvel):
         pass
