@@ -1,8 +1,6 @@
 from pyo import *
 from Synth_01 import *
 from Pulsynth import *
-from Hihat import *
-
 
 class SynthManager:
     def __init__(self, length, realLength):
@@ -18,7 +16,7 @@ class SynthManager:
         
 ### bus 1 ### 
         self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.5)
-        self.wtSynth = WTSynth(length=self.length, octave=0, mul=0.5)
+        self.wtSynth = WTSynth(length=self.length, octave=0, mul=0.1)
         self.velSynth = VelSynth(length=self.length, octave=2, mul=0.1)
         self.velSynth2 = VelSynth2(octave=8, voices=10, mul=0.002)
         
@@ -34,12 +32,10 @@ class SynthManager:
         self.rvb = Freeverb(input=self.lim1a, size=0.50, damp=0.80, bal=0.5, mul=1, add=0).out()
 
 ### bus 2 ###
-        self.pulsynth = Pulsynth(octave=3, voices=10, spread=3, mul=0.1)
+        self.pulsynth = Pulsynth(octave=5, voices=10, spread=2, mul=0.1)
         self.outputs2 = self.pulsynth.GetOutput()
         self.outputs2.out()
-        
-### bus 3 ###
-        #self.hat = Hihat()
+
 
 ########FOR BLOCK GROUPS########
         #which index from the freqBank for the block group

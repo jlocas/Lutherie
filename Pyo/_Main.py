@@ -6,7 +6,7 @@ from SynthManager import *
 import sys
 
 s = Server(sr=44100, nchnls=2, buffersize=4096, duplex=1)
-s.setMidiInputDevice(4)
+s.setMidiInputDevice(3)
 s.boot().start()
 
 

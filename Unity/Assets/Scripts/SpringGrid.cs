@@ -37,11 +37,15 @@ public class SpringGrid : MonoBehaviour {
 	private float averageDeviation;
 	private float averageHeight;
 
+	public int batches = 9;
+	private int batchSize;
+	private int which = 0; //repositioning is done in batches to avoid overloading the cpu / audio glitches
+
 
 	// Use this for initialization
 	void Awake () {
 		CreateGrid();
-
+		batchSize = sideLength / batches;
 		InvokeRepeating("PingBlocks", 0f, 1f);
 	
 	}
@@ -239,18 +243,46 @@ public class SpringGrid : MonoBehaviour {
 
 	private void Reposition() //reposition blocks[x,z]
 	{
-		for(int x = 0; x < sideLength; x++)	{
+		if (repositionBlocks){
+			int start = which*batchSize;
+			
+			for(int x = start; x < start + batchSize; x++)	{
+				for(int z = 0; z < sideLength; z++){
+					
+					if(blocks[x,z].IsRepositioning)
+					{
+						SpringGridBlock block = blocks[x,z];
+						Vector3 currentPos = block.Block.transform.position;
+						Vector3 targetPos = new Vector3(block.Anchor.transform.position.x, block.Anchor.transform.position.y + anchorHeight * -1, block.Anchor.transform.position.z);
+						float velocity = block.Body.velocity.magnitude;
+						float distance = Vector3.Distance(currentPos, targetPos); 
+						
+						if(distance > minDistance)	{
+							block.Block.transform.position = Vector3.Lerp(currentPos, targetPos, reposSpeed * Time.deltaTime);
+						} else if (currentPos != targetPos && distance <= minDistance && velocity < minVelocity){
+							block.Body.velocity = Vector3.zero;
+							block.Body.angularVelocity = Vector3.zero;
+							block.Block.transform.position = targetPos;
+							block.IsRepositioning = false;
+						}
+					}
+					
+				}
+			}
+			which = (which + 1) % batches;
+		}
+		/*for(int x = 0; x < sideLength; x++)	{
 			for(int z = 0; z <sideLength; z++){
 
 				if(blocks[x,z].IsRepositioning)
 				{
 					SpringGridBlock block = blocks[x,z];
 					Vector3 currentPos = block.Block.transform.position;
-					Vector3 targetPos = new Vector3(blocks[x,z].Anchor.transform.position.x, blocks[x,z].Anchor.transform.position.y + anchorHeight * -1, blocks[x,z].Anchor.transform.position.z);
+					Vector3 targetPos = new Vector3(block.Anchor.transform.position.x, block.Anchor.transform.position.y + anchorHeight * -1, block.Anchor.transform.position.z);
 					float velocity = block.Body.velocity.magnitude;
 					float distance = Vector3.Distance(currentPos, targetPos); 
 
-					if(distance > minDistance && velocity < minVelocity)	{
+					if(distance > minDistance)	{
 						block.Block.transform.position = Vector3.Lerp(currentPos, targetPos, reposSpeed * Time.deltaTime);
 					} else if (currentPos != targetPos && distance <= minDistance && velocity < minVelocity){
 						block.Body.velocity = Vector3.zero;
@@ -261,7 +293,8 @@ public class SpringGrid : MonoBehaviour {
 				}
 
 			}
-		}
+		}*/
+
 	}
 
 	private void SetRepositionNow(bool tog)
@@ -342,6 +375,7 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[2].spring = value;
 				}
 			}
+			spring.y = value;
 		}
 	}
 
@@ -352,6 +386,7 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[1].spring = value;
 				}
 			}
+			spring.z = value;
 		}
 	}
 
@@ -362,6 +397,7 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[0].damper = value;
 				}
 			}
+			damper.x = value;
 		}
 		
 	}
@@ -373,6 +409,7 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[2].damper = value;
 				}
 			}
+			damper.y = value;
 		}
 	}
 	
@@ -383,6 +420,7 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[1].damper = value;
 				}
 			}
+			damper.z = value;
 		}
 	}
 
