@@ -27,7 +27,8 @@ public enum MappedParameter
 	Springs_ZDamp,
 	Springs_FreezeEdges,
 	Springs_FreezeBlocks,
-	Springs_Reposition
+	Springs_Reposition,
+	Springs_LinkXZ
 }
 
 public enum Form
@@ -141,6 +142,7 @@ public class MidiController {
 		case MappedParameter.Rain2_ZSize:
 			rain2.SizeZ = Value;
 			break;
+
 		case MappedParameter.Springs_FreezeEdges:
 			grid.FreezeEdges = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;
@@ -167,6 +169,9 @@ public class MidiController {
 			break;
 		case MappedParameter.Springs_ZSpring:
 			grid.SpringZ = Value;
+			break;
+		case MappedParameter.Springs_LinkXZ:
+			grid.LinkXZ = Mathf.RoundToInt(Value) == 0 ? false : true;
 			break;
 		}
 	}

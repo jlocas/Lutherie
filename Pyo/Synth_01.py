@@ -18,7 +18,8 @@ class FMSynth:
         self.voiceMix = Mix(input=self.src, voices=2, mul=1, add=0)
         
         self.comp = Compress(input=self.voiceMix, thresh=-20, ratio=8, risetime=0.1, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
-        self.lim = Compress(input=self.comp, thresh=-5, ratio=100, risetime=0.1, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
+        self.lim = Compress(input=self.comp, thresh=-5, ratio=200, risetime=0.01, falltime=0.02, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
+        
         self.clip = Clip(input=self.lim, min=-0.99, max=0.99, mul=1, add=0)
         
         self.output = Mix(input=self.clip, voices=2, mul=self.mul)
@@ -148,12 +149,10 @@ class VelSynth:
 
         self.src = SineLoop(freq=self.freqs, feedback=0.1, mul=self.amps, add=0)
 
-        #self.delay = Delay(input=self.voiceMix, delay=0.005, feedback=0.15, maxdelay=1, mul=1, add=0)
-
         self.form = Biquad(input=self.src, freq=self.formants, q=25, type=2, mul=[2, 1, 0.5], add=0)
         self.mouth = Biquadx(input=self.form, freq=self.lpfreq, q=1, type=0, stages=2, mul=self.ammod, add=0)
         
-        self.lim = Compress(input=self.mouth, thresh=-5, ratio=100, risetime=0.1, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
+        self.lim = Compress(input=self.mouth, thresh=-5, ratio=100, risetime=0.02, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
         
         self.output = Mix(input=self.lim, voices=2, mul=self.mul, add=0)
         
@@ -170,9 +169,12 @@ class VelSynth:
         i = 0
         for x in range(int(self.length)):
             for z in range(int(self.length)):
-                self.freqs[i].setValue(midiToHz(notes[x][z] + 12 * self.octave))
+                self.freqs[i].setValue(midiToHz((notes[x][z] % 12) + 12 * self.octave))
+                print midiToHz((notes[x][z] % 12) + 12 * self.octave)
 
                 i += 1
+                
+
                         
     def GetOutput(self):
         return self.output
@@ -207,7 +209,7 @@ class VelSynth2:
         self.rvb = Freeverb(input=self.deg, size=0.90, damp=0.20, bal=0.80, mul=1, add=0)
 
         
-        self.lim = Compress(input=self.rvb, thresh=-5, ratio=100, risetime=0.1, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
+        self.lim = Compress(input=self.rvb, thresh=-5, ratio=100, risetime=0.02, falltime=0.2, lookahead=5.00, knee=0, outputAmp=False, mul=4, add=0)
         
         self.output = Mix(input=self.lim, voices=2, mul=self.mul, add=0)
         

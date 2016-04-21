@@ -15,6 +15,7 @@ public class SpringGrid : MonoBehaviour {
 	public int GroupsPerSide { get { return groupsPerSide;} }
 	public float anchorHeight = -10f;
 	public bool freezeEdges;
+	private bool edgesDone = true;
 	public bool blocksCollision;
 
 	[Space(20)] //spring settings
@@ -33,6 +34,7 @@ public class SpringGrid : MonoBehaviour {
 	private SpringGridBlock[,] blocks; //all blocks in x and z
 	private SpringGridBlockGroup[,] blockGroups; //all block groups
 	public SpringGridBlockGroup[,] BlockGroups{	get { return blockGroups; } }
+	private List<SpringGridBlock> edgeBlocks = new List<SpringGridBlock>();
 
 	private float averageDeviation;
 	private float averageHeight;
@@ -40,12 +42,14 @@ public class SpringGrid : MonoBehaviour {
 	public int batches = 9;
 	private int batchSize;
 	private int which = 0; //repositioning is done in batches to avoid overloading the cpu / audio glitches
+	private bool linkXZ = true;
 
 
 	// Use this for initialization
 	void Awake () {
 		CreateGrid();
 		batchSize = sideLength / batches;
+		FindEdgeBlocks();
 		InvokeRepeating("PingBlocks", 0f, 1f);
 	
 	}
@@ -53,6 +57,7 @@ public class SpringGrid : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Reposition();
+		RepositionEdges();
 	
 	}
 
@@ -271,17 +276,17 @@ public class SpringGrid : MonoBehaviour {
 			}
 			which = (which + 1) % batches;
 		}
-		/*for(int x = 0; x < sideLength; x++)	{
-			for(int z = 0; z <sideLength; z++){
+	}
 
-				if(blocks[x,z].IsRepositioning)
-				{
-					SpringGridBlock block = blocks[x,z];
+	private void RepositionEdges(){
+		if(freezeEdges && !edgesDone){
+			foreach(SpringGridBlock block in edgeBlocks){
+				if(block.IsRepositioning){
 					Vector3 currentPos = block.Block.transform.position;
 					Vector3 targetPos = new Vector3(block.Anchor.transform.position.x, block.Anchor.transform.position.y + anchorHeight * -1, block.Anchor.transform.position.z);
 					float velocity = block.Body.velocity.magnitude;
 					float distance = Vector3.Distance(currentPos, targetPos); 
-
+					
 					if(distance > minDistance)	{
 						block.Block.transform.position = Vector3.Lerp(currentPos, targetPos, reposSpeed * Time.deltaTime);
 					} else if (currentPos != targetPos && distance <= minDistance && velocity < minVelocity){
@@ -289,12 +294,52 @@ public class SpringGrid : MonoBehaviour {
 						block.Body.angularVelocity = Vector3.zero;
 						block.Block.transform.position = targetPos;
 						block.IsRepositioning = false;
+
+						edgesDone = true;
+						foreach(SpringGridBlock block2 in edgeBlocks){
+							if(block2.IsRepositioning){
+								edgesDone = false;
+							}
+						}
 					}
 				}
-
 			}
-		}*/
+		}
+	}
 
+	private void FindEdgeBlocks(){
+		for(int i = 0; i < sideLength; i++)
+		{
+			SpringGridBlock[] blocksToAdd = {blocks[0, i], blocks[sideLength - 1, i], blocks[i, 0], blocks[i, sideLength - 1]};
+			edgeBlocks.AddRange(blocksToAdd);
+		}
+	}
+
+	private void SetFreezeEdges(bool tog)
+	{
+		RigidbodyConstraints constraints = RigidbodyConstraints.FreezeRotation;
+		
+		if(tog)
+		{
+			constraints = RigidbodyConstraints.FreezeAll;
+		} else { 
+			constraints = RigidbodyConstraints.FreezeRotation; 
+		}
+		
+		for(int i = 0; i < sideLength; i++)
+		{
+			blocks[0, i].Body.constraints = constraints;
+			blocks[sideLength - 1, i].Body.constraints = constraints;
+			blocks[i, 0].Body.constraints = constraints;
+			blocks[i, sideLength - 1].Body.constraints = constraints;
+			
+			blocks[0, i].IsRepositioning = true;
+			blocks[sideLength - 1, i].IsRepositioning = true;
+			blocks[i, 0].IsRepositioning = true;
+			blocks[i, sideLength - 1].IsRepositioning = true;
+
+			edgesDone = false;
+		}
 	}
 
 	private void SetRepositionNow(bool tog)
@@ -358,12 +403,24 @@ public class SpringGrid : MonoBehaviour {
 
 	public float SpringX{
 		set{
-			for(int x = 0; x < sideLength; x++){
-				for(int z = 0; z < sideLength; z++){
-					blocks[x,z].Springs[0].spring = value;
+			if(linkXZ){
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[0].spring = value;
+						blocks[x,z].Springs[1].spring = value;
+					}
 				}
+				spring.x = value;
+				spring.z = value;
+			} else {
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[0].spring = value;
+					}
+				}
+				spring.x = value;
 			}
-			spring.x = value;
+
 		}
 
 	}
@@ -381,23 +438,47 @@ public class SpringGrid : MonoBehaviour {
 
 	public float SpringZ{
 		set{
-			for(int x = 0; x < sideLength; x++){
-				for(int z = 0; z < sideLength; z++){
-					blocks[x,z].Springs[1].spring = value;
+			if(linkXZ){
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[0].spring = value;
+						blocks[x,z].Springs[1].spring = value;
+					}
 				}
+				spring.x = value;
+				spring.z = value;
+			} else {
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[1].spring = value;
+					}
+				}
+				spring.z = value;
 			}
-			spring.z = value;
+			
 		}
 	}
 
 	public float DampX{
 		set{
-			for(int x = 0; x < sideLength; x++){
-				for(int z = 0; z < sideLength; z++){
-					blocks[x,z].Springs[0].damper = value;
+			if(linkXZ){
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[0].damper = value;
+						blocks[x,z].Springs[1].damper = value;
+					}
 				}
+				damper.x = value;
+				damper.z = value;
+			} else {
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[0].damper = value;
+					}
+				}
+				damper.x = value;
 			}
-			damper.x = value;
+			
 		}
 		
 	}
@@ -415,12 +496,24 @@ public class SpringGrid : MonoBehaviour {
 	
 	public float DampZ{
 		set{
-			for(int x = 0; x < sideLength; x++){
-				for(int z = 0; z < sideLength; z++){
-					blocks[x,z].Springs[1].damper = value;
+			if(linkXZ){
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[0].damper = value;
+						blocks[x,z].Springs[1].damper = value;
+					}
 				}
+				damper.x = value;
+				damper.z = value;
+			} else {
+				for(int x = 0; x < sideLength; x++){
+					for(int z = 0; z < sideLength; z++){
+						blocks[x,z].Springs[1].damper = value;
+					}
+				}
+				damper.z = value;
 			}
-			damper.z = value;
+			
 		}
 	}
 
@@ -442,23 +535,19 @@ public class SpringGrid : MonoBehaviour {
 		}
 	}
 
-	private void SetFreezeEdges(bool tog)
-	{
-		RigidbodyConstraints constraints = RigidbodyConstraints.FreezeRotation;
-
-		if(tog)
-		{
-			constraints = RigidbodyConstraints.FreezeAll;
-		} else { 
-			constraints = RigidbodyConstraints.FreezeRotation; 
+	public bool LinkXZ{
+		set{
+			linkXZ = value;
 		}
+	}
 
-		for(int i = 0; i < sideLength; i++)
-		{
-			blocks[0, i].Body.constraints = constraints;
-			blocks[sideLength - 1, i].Body.constraints = constraints;
-			blocks[i, 0].Body.constraints = constraints;
-			blocks[i, sideLength - 1].Body.constraints = constraints;
+	private void SetLinkXZ(bool link){
+		if(link){
+			for(int x = 0; x < sideLength; x++){
+				for(int z = 0; z < sideLength; z++){
+					blocks[x,z].Springs[1].spring = blocks[x,z].Springs[0].spring;
+				}
+			}
 		}
 	}
 

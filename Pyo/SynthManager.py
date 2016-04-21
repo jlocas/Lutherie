@@ -15,9 +15,9 @@ class SynthManager:
         self.avgDev = 0.0
         
 ### bus 1 ### 
-        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.5)
+        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.7)
         self.wtSynth = WTSynth(length=self.length, octave=0, mul=0.1)
-        self.velSynth = VelSynth(length=self.length, octave=2, mul=0.1)
+        self.velSynth = VelSynth(length=self.length, octave=3, mul=0.8)
         self.velSynth2 = VelSynth2(octave=8, voices=10, mul=0.002)
         
         

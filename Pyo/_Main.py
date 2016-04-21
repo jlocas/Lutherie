@@ -5,7 +5,7 @@ from Controller import *
 from SynthManager import *
 import sys
 
-s = Server(sr=44100, nchnls=2, buffersize=4096, duplex=1)
+s = Server(sr=44100, nchnls=2, buffersize=2048, duplex=1)
 s.setMidiInputDevice(3)
 s.boot().start()
 
