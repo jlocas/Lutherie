@@ -70,6 +70,16 @@ public class OSCSender : MonoBehaviour {
 		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/blockGroups/avgy", avg/groupsPerSide);
 	}
 
+	private void SendAverageHeightDev(){
+		float avg = 0f;
+		for(int x=0; x < groupsPerSide; x++){
+			for(int z=0; z < groupsPerSide; z++){
+				avg += Mathf.Abs(grid.BlockGroups[x,z].GetAveragePositionAbs().y);
+			}
+		}
+		OSCHandler.Instance.SendMessageToClient("Pyo", "/springGrid/blockGroups/avgydev", avg/groupsPerSide);
+	}
+
 	private void SendAverageVelocity(){
 		float avg = 0f;
 		for(int x=0; x < groupsPerSide; x++){
@@ -96,6 +106,7 @@ public class OSCSender : MonoBehaviour {
 		SendAverageDeviation();
 		SendAverageHeight();
 		SendAverageVelocity();
+		SendAverageHeightDev();
 	}
 
 	private void SendData(){
@@ -108,6 +119,7 @@ public class OSCSender : MonoBehaviour {
 		SendAverageDeviation();
 		SendAverageHeight();
 		SendAverageVelocity();
+		SendAverageHeightDev();
 
 		which = (which + 1) % 2;
 	}

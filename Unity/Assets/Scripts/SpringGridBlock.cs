@@ -137,6 +137,21 @@ public class SpringGridBlockGroup
 		return new Vector3(sum.x * multiplier, sum.y * multiplier, sum.z * multiplier);
 	}
 
+	public Vector3 GetAveragePositionAbs()
+	{
+		Vector3 sum = new Vector3(0f,0f,0f);
+		float multiplier = 1f / blocks.Length;
+		
+		foreach(SpringGridBlock blocky in blocks)
+		{
+			sum.x += Mathf.Abs(blocky.Block.transform.position.x);
+			sum.y += Mathf.Abs(blocky.Block.transform.position.y);
+			sum.z += Mathf.Abs(blocky.Block.transform.position.z);
+		}
+		
+		return new Vector3(sum.x * multiplier, sum.y * multiplier, sum.z * multiplier);
+	}
+
 	public float GetAverageSpeed(){
 		float avg = 0f;
 		foreach(SpringGridBlock blocky in blocks)

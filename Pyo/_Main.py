@@ -48,6 +48,9 @@ def OSC(address, *args):
     if address == '/springGrid/blockGroups/avgy':
         synman.UpdateAverageHeight(args[0])
         
+    if address == '/springGrid/blockGroups/avgydev':
+        synman.UpdateAverageHeightDev(args[0])
+        
     if address == '/springGrid/blockGroups/avgvel':
         synman.UpdateAverageVelocity(args[0])
 

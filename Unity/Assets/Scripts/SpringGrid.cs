@@ -410,15 +410,12 @@ public class SpringGrid : MonoBehaviour {
 						blocks[x,z].Springs[1].spring = value;
 					}
 				}
-				spring.x = value;
-				spring.z = value;
 			} else {
 				for(int x = 0; x < sideLength; x++){
 					for(int z = 0; z < sideLength; z++){
 						blocks[x,z].Springs[0].spring = value;
 					}
 				}
-				spring.x = value;
 			}
 
 		}
@@ -432,7 +429,6 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[2].spring = value;
 				}
 			}
-			spring.y = value;
 		}
 	}
 
@@ -445,15 +441,12 @@ public class SpringGrid : MonoBehaviour {
 						blocks[x,z].Springs[1].spring = value;
 					}
 				}
-				spring.x = value;
-				spring.z = value;
 			} else {
 				for(int x = 0; x < sideLength; x++){
 					for(int z = 0; z < sideLength; z++){
 						blocks[x,z].Springs[1].spring = value;
 					}
 				}
-				spring.z = value;
 			}
 			
 		}
@@ -476,7 +469,6 @@ public class SpringGrid : MonoBehaviour {
 						blocks[x,z].Springs[0].damper = value;
 					}
 				}
-				damper.x = value;
 			}
 			
 		}
@@ -490,7 +482,6 @@ public class SpringGrid : MonoBehaviour {
 					blocks[x,z].Springs[2].damper = value;
 				}
 			}
-			damper.y = value;
 		}
 	}
 	
@@ -503,15 +494,12 @@ public class SpringGrid : MonoBehaviour {
 						blocks[x,z].Springs[1].damper = value;
 					}
 				}
-				damper.x = value;
-				damper.z = value;
 			} else {
 				for(int x = 0; x < sideLength; x++){
 					for(int z = 0; z < sideLength; z++){
 						blocks[x,z].Springs[1].damper = value;
 					}
 				}
-				damper.z = value;
 			}
 			
 		}

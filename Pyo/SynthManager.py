@@ -1,5 +1,6 @@
 from pyo import *
 from Synth_01 import *
+from Synth_02 import *
 from Pulsynth import *
 
 class SynthManager:
@@ -15,11 +16,11 @@ class SynthManager:
         self.avgDev = 0.0
         
 ### bus 1 ### 
-        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.7)
-        self.wtSynth = WTSynth(length=self.length, octave=0, mul=0.1)
-        self.velSynth = VelSynth(length=self.length, octave=3, mul=0.8)
-        self.velSynth2 = VelSynth2(octave=8, voices=10, mul=0.002)
-        
+        self.fmSynth = FMSynth(length=self.length, octave=-1, mul=0.1)
+        self.wtSynth = WTSynth(length=self.length, octave=0, mul=0.007)
+        self.velSynth = VelSynth(length=self.length, octave=3, mul=0.1)
+        self.velSynth2 = VelSynth2(octave=8, voices=10, mul=0.005)       
+
         
         self.outputs1 = Mix(input=self.fmSynth.GetOutput() + self.wtSynth.GetOutput() + self.velSynth.GetOutput() + self.velSynth2.GetOutput(), voices=2, mul=1, add=0)
         #self.outputs1 = Mix(input=self.wtSynth.GetOutput(), voices=2, mul=1, add=0)
@@ -27,14 +28,25 @@ class SynthManager:
         #self.outputs1 = Mix(input=self.velSynth2.GetOutput(), voices=2, mul=1, add=0)
 
         self.comp1a = Compress(input=self.outputs1, thresh=-20, ratio=12, risetime=0.1, falltime=0.5, lookahead=0.00, knee=1, outputAmp=False, mul=1, add=0)
-        self.lim1a = Compress(input=self.comp1a, thresh=-5, ratio=100, risetime=0.01, falltime=0.02, lookahead=5.00, knee=0, outputAmp=False, mul=1, add=0)
+        self.lim1a = Compress(input=self.comp1a, thresh=-0.1, ratio=100, risetime=0.001, falltime=0.002, lookahead=5.00, knee=0, outputAmp=False, mul=1, add=0)
         
-        self.rvb = Freeverb(input=self.lim1a, size=0.50, damp=0.80, bal=0.5, mul=1, add=0).out()
-
 ### bus 2 ###
-        self.pulsynth = Pulsynth(octave=5, voices=10, spread=2, mul=0.1)
+        self.pulsynth = Pulsynth(octave=5, voices=10, spread=2, mul=0.015)
         self.outputs2 = self.pulsynth.GetOutput()
-        self.outputs2.out()
+
+### bus 3 ###
+        self.choir = Choir(mul=0.35)
+        self.outputs3 = self.choir.GetOutput()
+
+###master###
+        self.masterbus = DCBlock(self.lim1a + self.outputs2 + self.outputs3)
+        #self.mastrvb = Freeverb(input=self.masterbus, size=0.50, damp=0.80, bal=0.5, mul=1, add=0).out()
+        self.mastcomp1 = Compress(input=self.masterbus, thresh=-30, ratio=1.1, risetime=0.5, falltime=1, lookahead=0.00, knee=1, outputAmp=False, mul=2, add=0)
+        self.mastcomp2 = Compress(input=self.mastcomp1, thresh=-15, ratio=5, risetime=0.01, falltime=0.02, lookahead=0.00, knee=1, outputAmp=False, mul=2, add=0)
+        self.mastcomp3 = Compress(input=self.mastcomp2, thresh=-5, ratio=15, risetime=0.01, falltime=0.02, lookahead=0.00, knee=1, outputAmp=False, mul=1, add=0)
+        self.mastlim = Compress(input=self.mastcomp3, thresh=-0.1, ratio=100, risetime=0.001, falltime=0.002, lookahead=0.00, knee=1, outputAmp=False, mul=1, add=0)
+        self.mastclip = Clip(input=self.mastlim, min=-1.00, max=1.00, mul=1, add=0).out()
+
 
 
 ########FOR BLOCK GROUPS########
@@ -156,10 +168,22 @@ class SynthManager:
         self.fmSynth.UpdateAverageHeight(avgy)
         self.velSynth.UpdateAverageHeight(avgy)
         
+
+    def UpdateAverageHeightDev(self, avgydev):
+        self.fmSynth.UpdateAverageHeightDev(avgydev)
+        self.wtSynth.UpdateAverageHeightDev(avgydev)
+        self.velSynth.UpdateAverageHeightDev(avgydev)
+        self.velSynth2.UpdateAverageHeightDev(avgydev)
+        self.choir.UpdateAverageHeightDev(avgydev)
+        
+
     def UpdateAverageDeviation(self, avgdev):
         self.fmSynth.UpdateAverageDeviation(avgdev)
         self.wtSynth.UpdateAverageDeviation(avgdev)
         self.velSynth.UpdateAverageDeviation(avgdev)
+        self.velSynth2.UpdateAverageDeviation(avgdev)
+        self.choir.UpdateAverageDeviation(avgdev)
+
         
     def UpdateAverageVelocity(self, avgvel):
         self.wtSynth.UpdateAverageVelocity(avgvel)
