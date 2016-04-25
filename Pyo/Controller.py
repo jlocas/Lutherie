@@ -9,14 +9,14 @@ class Controller:
         self.debug = False 
         
         # Liste des adresses possibles
-        self.addresses = ["/controller/{0}".format(str(i)) for i in range(27)]
+        self.addresses = ["/controller/{0}".format(str(i)) for i in range(29)]
         # On cree OscDataSend une seule fois        
         self.oscsender = OscDataSend("f", self.port, self.addresses)
         
         if config == 0:
-            self.ctls = [Midictl(ctlnumber=i, minscale=0, maxscale=1) for i in range(27)]
+            self.ctls = [Midictl(ctlnumber=i, minscale=0, maxscale=1) for i in range(29)]
             # Appelle la fonction qui envoit le message
-            self.tf = [TrigFunc(Change(self.ctls[i]), function=self.send, arg=i) for i in range(27)]
+            self.tf = [TrigFunc(Change(self.ctls[i]), function=self.send, arg=i) for i in range(29)]
         
         elif config == 1:
             # Appelle la fonction qui envoit le message

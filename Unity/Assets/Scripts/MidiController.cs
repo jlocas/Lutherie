@@ -28,7 +28,9 @@ public enum MappedParameter
 	Springs_FreezeEdges,
 	Springs_FreezeBlocks,
 	Springs_Reposition,
-	Springs_LinkXZ
+	Springs_LinkXZ,
+	PLAY,
+	STOP
 }
 
 public enum Form
@@ -84,6 +86,13 @@ public class MidiController {
 		set
 		{
 			val = ApplyForm(value) * (maxVal - minVal) + minVal;
+		}
+	}
+
+	private ScreenFader fader;
+	public ScreenFader Fader{
+		set{
+			fader = value;
 		}
 	}
 
@@ -172,6 +181,12 @@ public class MidiController {
 			break;
 		case MappedParameter.Springs_LinkXZ:
 			grid.LinkXZ = Mathf.RoundToInt(Value) == 0 ? false : true;
+			break;
+		case MappedParameter.PLAY:
+			fader.Play = true;
+			break;
+		case MappedParameter.STOP:
+			fader.Stop = true;
 			break;
 		}
 	}
